@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<title>父亲节家书</title>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<script src="js/jquery.min.js"></script>
+<style>
+body {
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+</style>
+<body>
+    <div class="ready-page full-fill-a smooth-transition">
+		<div id="text1">父亲节快乐</div>
+        <div id="text2"></div> 
+		<div id="text3"></div> 
+		<img class= "submit" src="images/submit.png" onclick="poster();"/>
+    </div>
+	<div id="fx" >
+		<img style="width:60%; margin-left: 20%" src="images/fx.png"/>
+	</div>
+	
+<script>
+    'use strict';
+
+	var info1 = decodeURI(getURLParameter("info1"));
+	var info2 = decodeURI(getURLParameter("info2"));
+	var info3 = decodeURI(getURLParameter("info3"));
+	
+	function getURLParameter(name) {
+		return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+	}	
+	
+	function poster() {
+		
+		var url="bonus.html";
+			
+		window.location=encodeURI(encodeURI(url));
+			
+	}	
+	
+    (function($){
+		
+		if( info1 != "null" && info1.length > 8)
+		{
+			$("#text1").css("font-size", "30px");
+		}
+		
+		if( info2 != "null" && info2.length > 8)
+		{
+			$("#text2").css("font-size", "30px");
+		}
+
+		if( info3 != "null" && info3.length > 8)
+		{
+			$("#text3").css("font-size", "30px");
+		}		
+		
+        $(document).ready(function() {
+		
+		if (info1 != "null")
+			$("#text1").html(info1);
+		if (info2 != "null")	
+			$("#text2").html(info2);
+		if (info3 != "null")
+			$("#text3").html(info3);		
+        });
+
+    })(jQuery);
+</script>	
+<script type="text/javascript">
+	wx.ready(function () {
+	  var shareData = {
+	    title: 'DS新春拜年神器',
+	    desc: '说出新年祝福语，DS送你价值千元车模套装、精美DS车模、滴滴红包，人人有奖。',
+	    imgUrl: 'http://evermotion.cn/ds_card/images/icon1.jpg'
+	  };
+	  wx.onMenuShareAppMessage(shareData);
+	  wx.onMenuShareTimeline(shareData);
+	});
+
+	wx.error(function (res) {
+	  alert(res.errMsg);
+	});
+</script>	
+</body>
+</html>

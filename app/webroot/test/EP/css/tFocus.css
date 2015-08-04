@@ -1,0 +1,4 @@
+ul{padding: 0; margin: 0; }
+#tFocus-btn{width:800px;height:300px;position:relative;left:0;bottom:0;overflow:hidden;float:left;}
+#tFocus-btn ul{width:100000px;position:absolute;left:0;top:0;}
+#tFocus-btn li{float:left;cursor:pointer;overflow:hidden;display:inline;}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<title>父亲节家书</title>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<script src="js/jquery.min.js"></script>
+<style>
+body {
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+</style>
+<body>
+    <div class="ready-page full-fill-a smooth-transition">
+        <img class="btn1" src="images/btn1.png" onclick="clickbtn1();"/>
+		<img class="btn2" src="images/btn2.png" onclick="clickbtn2();"/>
+		<img class="btn3" src="images/btn3.png" onclick="clickbtn3();"/>
+		<input  type="text" id="itext1" maxlength="10" placeholder="(输入内容)" />
+		<input  type="text" id="itext2" maxlength="10" placeholder="(输入内容)" />	
+		<input  type="text" id="itext3" maxlength="10" placeholder="(输入内容)" />			
+		<img class= "submit" src="images/submit.png" onclick="poster();"/>
+    </div>
+<script>
+    'use strict';
+	var info1;
+	var info2;
+	var info3;
+	
+	function clickbtn1() {
+		$(".btn1").css("display", "none");
+		$("#itext1").css("display", "inline");
+		$("#itext1")[0].focus();
+    }
+	
+	function clickbtn2() {
+		$(".btn2").css("display", "none");
+		$("#itext2").css("display", "inline");
+		$("#itext2")[0].focus();
+    }
+
+	function clickbtn3() {
+		$(".btn3").css("display", "none");
+		$("#itext3").css("display", "inline");
+		$("#itext3")[0].focus();
+    }	
+	
+	function poster() {
+	
+		info1=$("#itext1").val();
+		info2=$("#itext2").val();
+		info3=$("#itext3").val();		
+		
+		var url="card.html?info1="+info1+"&info2="+info2+"&info3="+info3;
+			
+		window.location=encodeURI(encodeURI(url));
+			
+	}	
+	
+    (function($){
+				
+	
+        $(document).ready(function() {
+
+            /*wx.config({
+                debug: false,
+                appId: '<?php echo $signPackage["appId"];?>',
+                timestamp: <?php echo $signPackage["timestamp"];?>,
+                nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+                signature: '<?php echo $signPackage["signature"];?>',
+                jsApiList: [
+                    'onMenuShareTimeline'
+                ]
+            });*/
+            /*wx.ready(function () {
+                wx.onMenuShareTimeline({
+                    title: '纤柔炭金牙刷微信抢红包活动',
+                    link: 'http://s03.dev.xiumi.us/bonus/index.php',
+                    imgUrl: 'http://s03.dev.xiumi.us/bonus/image/cover.jpg',
+                    success: function (res) {
+                        $('.mask-share').hide();
+                        $.ajax({
+                            type: "post",
+                            url: "service.php?method=follow",
+                            data:{},
+                            dataType: "json",
+                            error: function() {
+                                alert("关注失败，请检查您的网络设置");
+                            },
+                            success: function(json) {
+                                if (json.status == 0) {
+                                } else {
+                                    alert("关注失败: " + json.message);
+                                }
+                            }
+                        });
+                    },
+                    cancel: function (res) {
+                        $('.mask-share').hide();
+                    },
+                    fail: function (res) {
+                        $('.mask-share').hide();
+                    }
+                });
+            });*/
+        });
+
+    })(jQuery);
+</script>	
+</body>
+</html>

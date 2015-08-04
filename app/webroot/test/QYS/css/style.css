@@ -1,0 +1,143 @@
+/* general */
+/* disable image blue border when clicked on Android */
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.full-fill-a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.smooth-transition {
+    -webkit-transition: 1s all linear;
+    -moz-transition: 1s all linear;
+    -ms-transition: 1s all linear;
+    -o-transition: 1s all linear;
+    transition: 1s all linear;
+}
+
+/* ready page */
+.ready-page {
+    background-image: url(../images/bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+
+.ready-page .btn1 {
+    position: absolute;
+    bottom: 67%;
+    left: 25%;
+    width: 50%;
+}
+#itext1{ 
+	position:absolute; 
+	bottom: 67%;
+    left: 25%;
+    width: 50%; 
+	font-size:32px; 
+	font-weight:800; 
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	display: none;
+}
+
+#text1{ 
+	position:absolute; 
+	bottom: 67%;
+    left: 25%;
+	font-size:32px; 
+	font-weight:800;  
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	white-space:nowrap;
+
+}
+
+
+.ready-page .btn2 {
+    position: absolute;
+    bottom: 55%;
+    left: 25%;
+    width: 50%;
+}
+
+#itext2{ 
+	position:absolute; 
+	bottom: 55%;
+    left: 25%;
+    width: 50%; 
+	font-size:32px; 
+	font-weight:800;  
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	display: none;
+}
+
+#text2{ 
+	position:absolute; 
+	bottom: 55%;
+    left: 25%;
+	font-size:32px; 
+	font-weight:800; 
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	white-space:nowrap;
+}
+
+.ready-page .btn3 {
+    position: absolute;
+    bottom: 43%;
+    left: 25%;
+    width: 50%;
+}
+
+#itext3{ 
+	position:absolute; 
+	bottom: 43%;
+    left: 25%;
+    width: 50%; 
+	font-size:32px; 
+	font-weight:800; 
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	display: none;
+}
+
+#text3{ 
+	position:absolute; 
+	bottom: 43%;
+    left: 25%;
+	font-size:32px; 
+	font-weight:800; 
+	color:#4D1200; 
+	background:none; 
+	border:none;
+	white-space:nowrap;
+}
+
+#fx{width:100%; position:absolute; top:85%;  z-index:99;}
+
+.ready-page .submit {
+    position: absolute;
+    bottom: 15%;
+    left: 70%;
+    width: 25%;
+}
+
+
+
