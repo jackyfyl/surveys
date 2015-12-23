@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="zh-cn">
+<script language="javascript">
+		function getId() {
+			var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+", "g"));
+			if(!!result) {
+				for (var i = 0; i < result.length; i++) {
+					var idx = result[i].indexOf('un=');
+					if(idx !== -1) {
+						return parseInt(result[i].substring(idx + 3));
+					}
+				}
+			}
+			return -1;
+		}
+	
+	
+		function browserRedirect() {
+			var sUserAgent = navigator.userAgent.toLowerCase();
+			var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+			var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+			var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+			var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+			var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+			var bIsAndroid = sUserAgent.match(/android/i) == "android";
+			var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+			var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+			if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+				var url="http://121.41.122.182/ccb2/Mobile_Index.html?un=" + getId();
+				window.location=encodeURI(encodeURI(url));
+			}
+		}	
+		browserRedirect();		
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title></title>
+    <link type="text/css" href="base.css" rel="stylesheet">
+    <link type="text/css" href="darkblue.css" rel="stylesheet">
+    <link type="text/css" href="hcheckbox.css" rel="stylesheet">
+
+    <!--外观设置出的自定义CSS-->
+    <style type="text/css">
+        .title {
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .option_label {
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .remark_label {
+            font-size: 14px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+    </style>
+
+    <style>
+        body {
+            min-width: 1024px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .slider-container {
+            position: absolute;
+            width: 100%;
+            height: 400px;
+        }
+
+        .slider {
+            position: absolute;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .btn-container {
+            position: absolute;
+            width: 100%;
+            margin-top: 410px;
+        }
+
+        .btn {
+            float: left;
+            margin: 5px 10px;
+        }
+
+        .slide-transition {
+            /*-webkit-transition: all 1s;
+            -moz-transition: all 1s;
+            -o-transition: all 1s;
+            transition: all 1s;*/
+        }
+
+        .wjhr {
+            position: absolute;
+            width: 100%;
+            margin-top: 400px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="wjContent">
+
+    <div class="Dhead clear marpad" style="height: 80px; border-bottom: 3px solid #55a1e3;">
+        <div class="Dhead_l">
+            <img style="position: absolute; left: 0;" src="img/logo.jpg">
+
+            <div style="margin-top: 1em; line-height: 2em;">龙卡信用卡客户调研</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="wjhr"></div>
+
+        <div class="survey_content slider-container">
+
+            <div class="matrix slider" id="slider0" style="display: block;">
+                <div class="title">
+                    您名下是否有尚未激活的龙卡信用卡？：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="1" onclick="onUserSelect(1, 1);">
+                        <label style="cursor: pointer;" class="option_label">是</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="2" onclick="onUserSelect(1, 2);">
+                        <label style="cursor: pointer;" class="option_label">否</label>
+                    </span>
+                </div>
+				
+            </div>
+
+            <div class="matrix slider" id="slider1" style="display: none;">
+                <div class="title">
+                    <span class="qcid">2</span>从您收到未激活的信用卡到现在有多长时间了？
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question2" value="1" onclick="onUserSelect(2, 1);">
+                        <label style="cursor: pointer;" class="option_label">一个月以内</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question2" value="2" onclick="onUserSelect(2, 2);">
+                        <label style="cursor: pointer;" class="option_label">一个月至二个月之间</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question2" value="3" onclick="onUserSelect(2, 3);">
+                        <label style="cursor: pointer;" class="option_label">超过二个月</label>
+                    </span>
+                </div>				
+				
+            </div>
+
+            <div class="matrix slider" id="slider2" style="display: none;">
+                <div class="title">
+                    <span class="qcid">3</span>您未激活该信用卡的最主要原因是什么？
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="1" onclick="onUserSelect(3, 1);">
+                        <label style="cursor: pointer;" class="option_label">担心开卡收取年费 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="2" onclick="onUserSelect(3, 2);">
+                        <label style="cursor: pointer;" class="option_label">促销活动不吸引 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="3" onclick="onUserSelect(3, 3);">
+                        <label style="cursor: pointer;" class="option_label">额度太低不想使用 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="4" onclick="onUserSelect(3, 4);">
+                        <label style="cursor: pointer;" class="option_label">不知道信用卡怎么激活 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="5" onclick="onUserSelect(3, 5);">
+                        <label style="cursor: pointer;" class="option_label">不喜欢卡函上推荐的激活方式 </label>
+                    </span>
+                </div>
+				
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="6" onclick="onUserSelect(3, 6);">
+                        <label style="cursor: pointer;" class="option_label">仅作为备用卡片（比如今后出国时使用）</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="7" onclick="onUserSelect(3, 7);">
+                        <label style="cursor: pointer;" class="option_label">满足集卡爱好</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="8" onclick="onUserSelect(3, 8);">
+                        <label style="cursor: pointer;" class="option_label">其他</label>
+                    </span>
+                </div>				
+            </div>
+
+            <div class="matrix slider" id="slider3" style="display: none;">
+                <div class="title">
+                    <span class="qcid">4</span>以下激活渠道您觉得哪个最方便？
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="1" onclick="onUserSelect(4, 1);">
+                        <label style="cursor: pointer;" class="option_label">登录网上银行或信用卡网站</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="2" onclick="onUserSelect(4, 2);">
+                        <label style="cursor: pointer;" class="option_label">去附近的营业网点</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="3" onclick="onUserSelect(4, 3);">
+                        <label style="cursor: pointer;" class="option_label">发短信</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="4" onclick="onUserSelect(4, 4);">
+                        <label style="cursor: pointer;" class="option_label">微信</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="5" onclick="onUserSelect(4, 5);">
+                        <label style="cursor: pointer;" class="option_label">手机银行</label>
+                    </span>
+                </div>
+				
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="6" onclick="onUserSelect(4, 6);">
+                        <label style="cursor: pointer;" class="option_label">其他</label>
+                    </span>
+                </div>				
+            </div>
+
+
+            <div class="slider" id="slider-last" style="display: none; font-size: 30px; margin-top: 150px; text-align: center;">
+                问卷已经提交，感谢您的参与，祝您生活愉快！
+            </div>
+
+            <!--<div id="pages_box"></div>-->
+        </div>
+
+        <div class="wjhr"></div>
+
+        <div id="buttonlist" class="maxtop btns clear btn-container">
+
+            <!--<div class="WJButton wj_color" id="start_survey" style="display: none;">开始</div>
+            <div class="WJButton wj_color mRight" id="restart_survey" style=""> 重新开始&gt;&gt;</div>
+            <div class="WJButton wj_color" id="continue_survey" style="">继续答题 &gt;&gt;</div>-->
+            <div class="WJButton wj_color mRight btn prev-btn" id="prev_page" style="display: none;">
+                &lt;&lt;上一题
+            </div>
+            <div class="WJButton wj_color btn next-btn" id="next_page">
+                <span class="wj_word">下一题&gt;&gt;</span>
+                <span class="wj_number"></span>
+            </div>
+            <div class="WJButton wj_color btn submit-btn" id="final_submit" style="display: none;">
+                提交
+            </div>
+            <!--<div class="WJButton wj_color" id="reload_btn" style="display: none; margin: 0 auto; float: none;">重新加载</div>-->
+            <div class="Error_point" style="display: none;">请确保每道题目的答案有效</div>
+            <!--<div class="load_msg" id="load_msg" style="display: none;">问卷加载中 . . .</div>-->
+            <div class="load_msg mLeft10 dis_none" id="next_load"></div>
+
+            <div class="wjprogress">
+                <span class="progress-text">0%</span>
+
+                <div class="bar">
+                    <div class="barbox"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="jquery-hcheckbox.js"></script>
+    <script language="javascript">
+        $(function () {
+            $(".wjContent").jqTransform({imgPath: 'jqtransformplugin/img/'});
+        });
+    </script>
+
+    <script>
+        (function ($) {
+            var sliderNum = 4;
+            var curIndex = 0;
+            var transitionDuration = 10;
+            var isTransiting = false;
+            var answerData = {};
+			
+			var bjump = 0;
+
+            onUserSelect = function (question, answer) {
+                answerData[question] = answer;
+                //console.log (question, answer);
+				if ( (question == 1) && (answer == 2) )
+				{
+					answerData[2] = 0;
+					answerData[3] = 0;
+				}
+            };
+
+            score_select = function (question, answer) {
+                for (var i = 1; i <= answer; i++) {
+                    var comp = "#Q" + question + "_" + i;
+                    $(comp).addClass("back_n");
+                }
+
+                for (var i = answer + 1; i <= 5; i++) {
+                    var comp = "#Q" + question + "_" + i;
+                    $(comp).removeClass("back_n");
+                }
+                answerData[question] = answer;
+                //console.log (question, answer);
+            };
+
+            function checkCurPageAnswer() {
+                if (curIndex < 13) {
+                    if (!!answerData[curIndex + 1]) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+
+            function updateProgress() {            
+			
+				var percent = parseInt(curIndex / sliderNum * 100) + '%';
+				
+				
+                $('.progress-text').html(percent);
+                $('.barbox').css('width', percent);
+            }
+
+            function getUserId() {
+                var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+", "g"));
+                if(!!result) {
+                    for (var i = 0; i < result.length; i++) {
+                        var idx = result[i].indexOf('un=');
+                        if(idx !== -1) {
+                            return parseInt(result[i].substring(idx + 3));
+                        }
+                    }
+                }
+                return -1;
+            }
+
+            $('.next-btn').on('click', function () {
+                if (isTransiting || curIndex >= sliderNum - 1) {
+                    return;
+                }
+                if (!checkCurPageAnswer()) {
+                    $('.Error_point').show();
+                    return;
+                }
+                $('.Error_point').hide();
+                isTransiting = true;
+                var curSlider = $('#slider' + curIndex);
+                var nextSlider = $('#slider' + (curIndex + 1));
+				
+				if ( ( curIndex == 0) && (answerData[1] == 2) )
+				{
+					nextSlider = $('#slider' + (curIndex + 3));
+					bjump = 1;
+				}
+				else
+				{
+					bjump = 0; 
+				}
+				
+                nextSlider.css({'display': 'block', 'transform': 'translateX(100%)'});
+                curSlider.addClass('slide-transition');
+                nextSlider.addClass('slide-transition');
+                setTimeout(function () {
+                    curSlider.css('transform', 'translateX(-100%)');
+                    nextSlider.css('transform', 'translateX(0)');
+                    $('.prev-btn').show();
+					
+					if (bjump == 1)
+						curIndex += 3;
+					else
+						curIndex += 1;
+					
+                    if (curIndex >= sliderNum - 1) {
+                        $('.next-btn').hide();
+                        $('.submit-btn').show();
+                    }
+                    else {
+                        $('.next-btn').show();
+                    }
+                    updateProgress();
+                }, 0);
+                setTimeout(function () {
+                    curSlider.removeClass('slide-transition');
+                    nextSlider.removeClass('slide-transition');
+                    curSlider.hide();
+                    isTransiting = false;
+                }, transitionDuration);
+            });
+
+            $('.prev-btn').on('click', function () {
+                if (isTransiting || curIndex <= 0) {
+                    return;
+                }
+                isTransiting = true;
+                var curSlider = $('#slider' + curIndex);
+				
+                var prevSlider = $('#slider' + (curIndex - 1));
+				if (bjump == 1)
+					prevSlider = $('#slider' + (curIndex - 3));
+
+                prevSlider.css({'display': 'block', 'transform': 'translateX(-100%)'});
+                curSlider.addClass('slide-transition');
+                prevSlider.addClass('slide-transition');
+                setTimeout(function () {
+                    curSlider.css('transform', 'translateX(100%)');
+                    prevSlider.css('transform', 'translateX(0)');
+                    $('.next-btn').show();
+                    $('.submit-btn').hide();
+					
+					if (bjump == 1)
+						curIndex -= 3;
+					else
+						curIndex -= 1;
+                    
+					if (curIndex <= 0) {
+                        $('.prev-btn').hide();
+                    }
+                    else {
+                        $('.prev-btn').show();
+                    }
+                    updateProgress();
+                }, 0);
+                setTimeout(function () {
+                    curSlider.removeClass('slide-transition');
+                    prevSlider.removeClass('slide-transition');
+                    curSlider.hide();
+                    isTransiting = false;
+                }, transitionDuration);
+            });
+
+            $('.submit-btn').on('click', function () {
+                function onSuccess() {
+                    isTransiting = true;
+                    $('.prev-btn').hide();
+                    $('.next-btn').hide();
+                    $('.submit-btn').hide();
+                    var curSlider = $('#slider' + curIndex);
+                    var nextSlider = $('#slider-last');
+                    nextSlider.css({'display': 'block', 'transform': 'translateX(100%)'});
+                    curSlider.addClass('slide-transition');
+                    nextSlider.addClass('slide-transition');
+                    setTimeout(function () {
+                        ++curIndex;
+                        curSlider.css('transform', 'translateX(-100%)');
+                        nextSlider.css('transform', 'translateX(0)');
+                        updateProgress();
+                    }, 0);
+                    setTimeout(function () {
+                        curSlider.removeClass('slide-transition');
+                        nextSlider.removeClass('slide-transition');
+                        curSlider.hide();
+                        isTransiting = false;
+                    }, transitionDuration);
+                }
+
+                // check answer data
+                if (isTransiting) {
+                    return;
+                }
+                if (!checkCurPageAnswer()) {
+                    $('.Error_point').show();
+                    return;
+                }
+                $('.Error_point').hide();
+                // submit to server
+                var uiOnly = false;
+                answerData[0] = getUserId();
+                console.log('submit data', answerData);
+                if (uiOnly) {
+                    // send data success
+                    onSuccess();
+                }
+                else {
+                    $.ajax({
+                        type: "post",
+                        url: "/ccbUnactivedSurvey/add",
+                        data: answerData,
+                        dataType: "json",
+                        success: function (json) {
+                            // send data success
+                            onSuccess();
+                        },
+                        error: function (err) {
+                            if(err.status === 200) {
+                                onSuccess();
+                            }
+                            //console.error(err, err.status);
+                            //alert("提交失败，请检查您的网络设置");
+                        }
+
+                    });
+                }
+            });
+
+        })(jQuery);
+    </script>
+</div>
+
+</body>
+</html>

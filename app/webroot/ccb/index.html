@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="zh-cn">
+    <script language="javascript">
+        function getId() {
+            var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+", "g"));
+            if (!!result) {
+                for (var i = 0; i < result.length; i++) {
+                    var idx = result[i].indexOf('un=');
+                    if (idx !== -1) {
+                        return parseInt(result[i].substring(idx + 3));
+                    }
+                }
+            }
+            return -1;
+        }
+
+
+        function browserRedirect() {
+            var sUserAgent = navigator.userAgent.toLowerCase();
+            var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+            var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+            var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+            var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+            var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+            var bIsAndroid = sUserAgent.match(/android/i) == "android";
+            var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+            var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+            if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+                var url = "http://121.41.122.182/ccb/mobile/Mobile_Index.html?un=" + getId();
+                window.location = encodeURI(encodeURI(url));
+            }
+        }
+        browserRedirect();
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title></title>
+    <link type="text/css" href="base.css" rel="stylesheet">
+    <link type="text/css" href="darkblue.css" rel="stylesheet">
+    <link type="text/css" href="hcheckbox.css" rel="stylesheet">
+
+    <!--外观设置出的自定义CSS-->
+    <style type="text/css">
+        .title {
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .option_label {
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .remark_label {
+            font-size: 14px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+    </style>
+
+    <style>
+        body {
+            min-width: 1024px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .slider-container {
+            position: absolute;
+            width: 100%;
+            height: 400px;
+        }
+
+        .slider {
+            position: absolute;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #666666;
+            font-family: 微软雅黑;
+        }
+
+        .btn-container {
+            position: absolute;
+            width: 100%;
+            margin-top: 410px;
+        }
+
+        .btn {
+            float: left;
+            margin: 5px 10px;
+        }
+
+        .slide-transition {
+            /*-webkit-transition: all 1s;
+            -moz-transition: all 1s;
+            -o-transition: all 1s;
+            transition: all 1s;*/
+        }
+
+        .wjhr {
+            position: absolute;
+            width: 100%;
+            margin-top: 400px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="wjContent">
+
+    <div class="Dhead clear marpad" style="height: 80px; border-bottom: 3px solid #55a1e3;">
+        <div class="Dhead_l">
+            <img style="position: absolute; left: 0;" src="img/logo.jpg">
+
+            <div style="margin-top: 1em; line-height: 2em;">龙卡信用卡客户调研</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="wjhr"></div>
+
+        <div class="survey_content slider-container">
+
+            <div class="matrix slider" id="slider0" style="display: block;">
+                <div class="title">
+                    1、境内网上购物时，您最信赖哪个网站：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="1" onclick="onUserSelect(1, 1);">
+                        <label style="cursor: pointer;" class="option_label">淘宝网</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="2" onclick="onUserSelect(1, 2);">
+                        <label style="cursor: pointer;" class="option_label">京东网</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="3" onclick="onUserSelect(1, 3);">
+                        <label style="cursor: pointer;" class="option_label">一号店</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="4" onclick="onUserSelect(1, 4);">
+                        <label style="cursor: pointer;" class="option_label">当当网</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question1" value="5" onclick="onUserSelect(1, 5);">
+                        <label style="cursor: pointer;" class="option_label">其它</label>
+                    </span>
+                </div>
+            </div>
+
+            <div class="matrix slider" id="slider1" style="display: none;">
+                <div class="title">
+                    <span class="qcid">2</span>2、您有过海淘的经历吗？：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question2" value="1" onclick="onUserSelect(2, 1);">
+                        <label style="cursor: pointer;" class="option_label">有</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question2" value="2" onclick="onUserSelect(2, 2);">
+                        <label style="cursor: pointer;" class="option_label">没有</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider2" style="display: none;">
+                <div class="title">
+                    <span class="qcid">3</span>3、海淘时，您最信赖哪个网站：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="1" onclick="onUserSelect(3, 1);">
+                        <label style="cursor: pointer;" class="option_label">亚马逊 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="2" onclick="onUserSelect(3, 2);">
+                        <label style="cursor: pointer;" class="option_label">PayPal </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="3" onclick="onUserSelect(3, 3);">
+                        <label style="cursor: pointer;" class="option_label">乐天 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="4" onclick="onUserSelect(3, 4);">
+                        <label style="cursor: pointer;" class="option_label">Apple Store </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question3" value="5" onclick="onUserSelect(3, 5);">
+                        <label style="cursor: pointer;" class="option_label">其它 </label>
+                    </span>
+                </div>
+            </div>
+
+            <div class="matrix slider" id="slider3" style="display: none;">
+                <div class="title">
+                    <span class="qcid">4</span>4、如有海淘经历，您最信赖哪个品牌的信用卡进行海淘？
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="1" onclick="onUserSelect(4, 1);">
+                        <label style="cursor: pointer;" class="option_label">VISA维萨</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="2" onclick="onUserSelect(4, 2);">
+                        <label style="cursor: pointer;" class="option_label">Master万事达</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="3" onclick="onUserSelect(4, 3);">
+                        <label style="cursor: pointer;" class="option_label">银联</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="4" onclick="onUserSelect(4, 4);">
+                        <label style="cursor: pointer;" class="option_label">JCB</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question4" value="5" onclick="onUserSelect(4, 5);">
+                        <label style="cursor: pointer;" class="option_label">其它</label>
+                    </span>
+                </div>
+            </div>
+
+            <div class="matrix slider" id="slider4" style="display: none;">
+                <div class="title">
+                    <span class="qcid">5</span>5、您在网购中扮演的角色是：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question5" value="1" onclick="onUserSelect(5, 1);">
+                        <label style="cursor: pointer;" class="option_label">买方</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question5" value="2" onclick="onUserSelect(5, 2);">
+                        <label style="cursor: pointer;" class="option_label">卖方</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question5" value="3" onclick="onUserSelect(5, 3);">
+                        <label style="cursor: pointer;" class="option_label">两者都有</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider5" style="display: none;">
+                <div class="title">
+                    <span class="qcid">6</span>6、您平均每月网购交易金额（元）：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question6" value="1" onclick="onUserSelect(6, 1);">
+                        <label style="cursor: pointer;" class="option_label">300元以下（含300）</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question6" value="2" onclick="onUserSelect(6, 2);">
+                        <label style="cursor: pointer;" class="option_label">300-500（含500）</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question6" value="3" onclick="onUserSelect(6, 3);">
+                        <label style="cursor: pointer;" class="option_label">500-1000（含1000）</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question6" value="4" onclick="onUserSelect(6, 4);">
+                        <label style="cursor: pointer;" class="option_label">1000以上</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider6" style="display: none;">
+                <div class="title">
+                    <span class="qcid">7</span>7、您在网上购买最多的是哪一类商品：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="1" onclick="onUserSelect(7, 1);">
+                        <label style="cursor: pointer;" class="option_label">生活用品</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="2" onclick="onUserSelect(7, 2);">
+                        <label style="cursor: pointer;" class="option_label">服饰、鞋帽、包</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="3" onclick="onUserSelect(7, 3);">
+                        <label style="cursor: pointer;" class="option_label">数码产品 点卡、话费、qq业务等虚拟物品 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="4" onclick="onUserSelect(7, 4);">
+                        <label style="cursor: pointer;" class="option_label">食品</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="5" onclick="onUserSelect(7, 5);">
+                        <label style="cursor: pointer;" class="option_label">书籍 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="6" onclick="onUserSelect(7, 6);">
+                        <label style="cursor: pointer;" class="option_label">礼品 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question7" value="7" onclick="onUserSelect(7, 7);">
+                        <label style="cursor: pointer;" class="option_label">其它 </label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider7" style="display: none;">
+                <div class="title">
+                    <span class="qcid">8</span>8、导致您网上购物的最主要原因：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question8" value="1" onclick="onUserSelect(8, 1);">
+                        <label style="cursor: pointer;" class="option_label">抽不出时间去逛商场 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question8" value="2" onclick="onUserSelect(8, 2);">
+                        <label style="cursor: pointer;" class="option_label">跟上时代的步伐</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question8" value="3" onclick="onUserSelect(8, 3);">
+                        <label style="cursor: pointer;" class="option_label">价格低廉</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question8" value="4" onclick="onUserSelect(8, 4);">
+                        <label style="cursor: pointer;" class="option_label">其他</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider8" style="display: none;">
+                <div class="title">
+                    <span class="qcid">9</span>9、您目前常用的交易方式是：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question9" value="1" onclick="onUserSelect(9, 1);">
+                        <label style="cursor: pointer;" class="option_label">支付宝、财付通等第三方支付</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question9" value="2" onclick="onUserSelect(9, 2);">
+                        <label style="cursor: pointer;" class="option_label">商业银行的网上银行、手机银行支付</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question9" value="3" onclick="onUserSelect(9, 3);">
+                        <label style="cursor: pointer;" class="option_label">货到付款给送货的快递公司</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question9" value="4" onclick="onUserSelect(9, 4);">
+                        <label style="cursor: pointer;" class="option_label">现金支付</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question9" value="5" onclick="onUserSelect(9, 5);">
+                        <label style="cursor: pointer;" class="option_label">其他方式</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider9" style="display: none;">
+                <div class="title">
+                    <span class="qcid">10</span>10、网上购物的过程中，你最关注的支付体验是：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question10" value="1" onclick="onUserSelect(10, 1);">
+                        <label style="cursor: pointer;" class="option_label">是否便捷</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question10" value="2" onclick="onUserSelect(10, 2);">
+                        <label style="cursor: pointer;" class="option_label">是否安全</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question10" value="3" onclick="onUserSelect(10, 3);">
+                        <label style="cursor: pointer;" class="option_label">支付成功率高</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question10" value="4" onclick="onUserSelect(10, 4);">
+                        <label style="cursor: pointer;" class="option_label">支付速度快 </label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question10" value="5" onclick="onUserSelect(10, 5);">
+                        <label style="cursor: pointer;" class="option_label">其他 </label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider10" style="display: none;">
+                <div class="title">
+                    <span class="qcid">11</span>11、你认为网上购物的最大优点是什么：
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question11" value="1" onclick="onUserSelect(11, 1);">
+                    <label style="cursor: pointer;" class="option_label">快捷方便</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question11" value="2" onclick="onUserSelect(11, 2);">
+                    <label style="cursor: pointer;" class="option_label">物美价廉 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question11" value="3" onclick="onUserSelect(11, 3);">
+                    <label style="cursor: pointer;" class="option_label">搜索简单 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question11" value="4" onclick="onUserSelect(11, 4);">
+                    <label style="cursor: pointer;" class="option_label">其他</label>
+                </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider11" style="display: none;">
+                <div class="title">
+                    <span class="qcid">12</span>12、您认为网购最大的不足是：
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question12" value="1" onclick="onUserSelect(12, 1);">
+                    <label style="cursor: pointer;" class="option_label">递送速度慢 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question12" value="2" onclick="onUserSelect(12, 2);">
+                    <label style="cursor: pointer;" class="option_label">质量无保障</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question12" value="3" onclick="onUserSelect(12, 3);">
+                    <label style="cursor: pointer;" class="option_label">退换货不方便 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question12" value="4" onclick="onUserSelect(12, 4);">
+                    <label style="cursor: pointer;" class="option_label">交易有风险</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question12" value="5" onclick="onUserSelect(12, 5);">
+                    <label style="cursor: pointer;" class="option_label">其他</label>
+                </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider12" style="display: none;">
+                <div class="title">
+                    <span class="qcid">13</span>13、您最喜欢网上购物的哪些活动：
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="1" onclick="onUserSelect(13, 1);">
+                    <label style="cursor: pointer;" class="option_label">打折促销</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="2" onclick="onUserSelect(13, 2);">
+                    <label style="cursor: pointer;" class="option_label">免费送货</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="3" onclick="onUserSelect(13, 3);">
+                    <label style="cursor: pointer;" class="option_label">购物返券 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="4" onclick="onUserSelect(13, 4);">
+                    <label style="cursor: pointer;" class="option_label">附送礼品</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="5" onclick="onUserSelect(13, 5);">
+                    <label style="cursor: pointer;" class="option_label">积分兑奖</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question13" value="6" onclick="onUserSelect(13, 6);">
+                    <label style="cursor: pointer;" class="option_label">其他</label>
+                </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider13" style="display: none;">
+                <div class="title">
+                    <span class="qcid">14</span>14、您是否愿意尝试使用网络信用卡：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question13" value="1" onclick="onUserSelect(14, 1);">
+                        <label style="cursor: pointer;" class="option_label">是</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question13" value="2" onclick="onUserSelect(14, 2);">
+                        <label style="cursor: pointer;" class="option_label">否</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="slider" id="slider14" style="display: none;">
+                <table cellspacing="0" cellpadding="0" border="0" class="score_table">
+                    <tbody>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0" width="550" id="tip_table" class="tips">
+                                <tbody>
+                                <tr>
+                                    <td width="33.33%" valign="bottom" align="left" class="option_label">完全不同意</td>
+                                    <td width="33.33%" valign="bottom" align="center" class="option_label">一般</td>
+                                    <td width="33.33%" valign="bottom" align="right" class="option_label">完全同意</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!--<tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">您是否愿意尝试使用网络信用卡</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q14_1" onclick="score_select(14, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q14_2" onclick="score_select(14, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q14_3" onclick="score_select(14, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q14_4" onclick="score_select(14, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q14_5" onclick="score_select(14, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>-->
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">您会向身边的人推荐网络信用卡</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q15_1" onclick="score_select(15, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q15_2" onclick="score_select(15, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q15_3" onclick="score_select(15, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q15_4" onclick="score_select(15, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q15_5" onclick="score_select(15, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">您对网络信用卡的功能充满期待</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q16_1" onclick="score_select(16, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q16_2" onclick="score_select(16, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q16_3" onclick="score_select(16, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q16_4" onclick="score_select(16, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q16_5" onclick="score_select(16, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡会比普通信用卡有着明显的优势</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q17_1" onclick="score_select(17, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q17_2" onclick="score_select(17, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q17_3" onclick="score_select(17, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q17_4" onclick="score_select(17, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q17_5" onclick="score_select(17, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡网上支付会比普通信用卡更方便</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q18_1" onclick="score_select(18, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q18_2" onclick="score_select(18, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q18_3" onclick="score_select(18, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q18_4" onclick="score_select(18, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q18_5" onclick="score_select(18, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡功能与权益会比普通信用卡更好</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q19_1" onclick="score_select(19, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q19_2" onclick="score_select(19, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q19_3" onclick="score_select(19, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q19_4" onclick="score_select(19, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q19_5" onclick="score_select(19, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">希望网络信用卡有更安全的支付保障</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q20_1" onclick="score_select(20, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q20_2" onclick="score_select(20, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q20_3" onclick="score_select(20, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q20_4" onclick="score_select(20, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q20_5" onclick="score_select(20, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">希望网络信用卡有更便捷的支付体验</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q21_1" onclick="score_select(21, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q21_2" onclick="score_select(21, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q21_3" onclick="score_select(21, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q21_4" onclick="score_select(21, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q21_5" onclick="score_select(21, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">希望网络信用卡有更快的支付速度</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q22_1" onclick="score_select(22, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q22_2" onclick="score_select(22, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q22_3" onclick="score_select(22, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q22_4" onclick="score_select(22, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q22_5" onclick="score_select(22, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">希望网络信用卡有更高的支付成功率</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q23_1" onclick="score_select(23, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q23_2" onclick="score_select(23, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q23_3" onclick="score_select(23, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q23_4" onclick="score_select(23, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q23_5" onclick="score_select(23, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="slider" id="slider15" style="display: none;">
+                <table cellspacing="0" cellpadding="0" border="0" class="score_table">
+                    <tbody>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0" width="550" id="tip_table" class="tips">
+                                <tbody>
+                                <tr>
+                                    <td width="33.33%" valign="bottom" align="left" class="option_label">完全不同意</td>
+                                    <td width="33.33%" valign="bottom" align="center" class="option_label">一般</td>
+                                    <td width="33.33%" valign="bottom" align="right" class="option_label">完全同意</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡的使用说明是有必要的</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q24_1" onclick="score_select(24, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q24_2" onclick="score_select(24, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q24_3" onclick="score_select(24, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q24_4" onclick="score_select(24, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q24_5" onclick="score_select(24, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡相对传统信用卡有明显的吸引力</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q25_1" onclick="score_select(25, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q25_2" onclick="score_select(25, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q25_3" onclick="score_select(25, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q25_4" onclick="score_select(25, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q25_5" onclick="score_select(25, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡能提供更多的功能和权益</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q26_1" onclick="score_select(26, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q26_2" onclick="score_select(26, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q26_3" onclick="score_select(26, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q26_4" onclick="score_select(26, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q26_5" onclick="score_select(26, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络支付时需要提供充分而完整的信用卡信息</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q27_1" onclick="score_select(27, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q27_2" onclick="score_select(27, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q27_3" onclick="score_select(27, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q27_4" onclick="score_select(27, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q27_5" onclick="score_select(27, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡的支付流程是容易使用的</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q28_1" onclick="score_select(28, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q28_2" onclick="score_select(28, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q28_3" onclick="score_select(28, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q28_4" onclick="score_select(28, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q28_5" onclick="score_select(28, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="slider" id="slider16" style="display: none;">
+                <table cellspacing="0" cellpadding="0" border="0" class="score_table">
+                    <tbody>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0" width="550" id="tip_table" class="tips">
+                                <tbody>
+                                <tr>
+                                    <td width="33.33%" valign="bottom" align="left" class="option_label">完全不同意</td>
+                                    <td width="33.33%" valign="bottom" align="center" class="option_label">一般</td>
+                                    <td width="33.33%" valign="bottom" align="right" class="option_label">完全同意</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网购让我们想买什么就能买到什么</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q29_1" onclick="score_select(29, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q29_2" onclick="score_select(29, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q29_3" onclick="score_select(29, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q29_4" onclick="score_select(29, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q29_5" onclick="score_select(29, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网购不会泄漏消费者的交易信息</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q30_1" onclick="score_select(30, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q30_2" onclick="score_select(30, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q30_3" onclick="score_select(30, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q30_4" onclick="score_select(30, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q30_5" onclick="score_select(30, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网上支付的安全性是可信赖的</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q31_1" onclick="score_select(31, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q31_2" onclick="score_select(31, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q31_3" onclick="score_select(31, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q31_4" onclick="score_select(31, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q31_5" onclick="score_select(31, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网购的商品价格很合理</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q32_1" onclick="score_select(32, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q32_2" onclick="score_select(32, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q32_3" onclick="score_select(32, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q32_4" onclick="score_select(32, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q32_5" onclick="score_select(32, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr class="data_row">
+                        <td class="option_label" style="text-align:right;padding:5px 15px;">网络信用卡失卡保障是有必要的</td>
+                        <td>
+                            <table cellspacing="0" cellpadding="0" border="0"
+                                   style="border:solid 0px gray;overfloat:hidden;font-size:12px;" class="data_row">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <table cellspacing="0" cellpadding="1" border="0" scorereasoncan=""
+                                               scorereasonmust=""
+                                               class="table_score">
+                                            <tbody>
+                                            <tr>
+                                                <td name="1" class="div_float" id="Q33_1" onclick="score_select(33, 1)">
+                                                    1
+                                                </td>
+                                                <td name="2" class="div_float" id="Q33_2" onclick="score_select(33, 2)">
+                                                    2
+                                                </td>
+                                                <td name="3" class="div_float" id="Q33_3" onclick="score_select(33, 3)">
+                                                    3
+                                                </td>
+                                                <td name="4" class="div_float" id="Q33_4" onclick="score_select(33, 4)">
+                                                    4
+                                                </td>
+                                                <td name="5" class="div_float" id="Q33_5" onclick="score_select(33, 5)">
+                                                    5
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="matrix slider" id="slider17" style="display: none;">
+                <div class="title">
+                    <span class="qcid">17</span>17、您的性别：
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question17" value="1" onclick="onUserSelect(34, 1);">
+                        <label style="cursor: pointer;" class="option_label">男</label>
+                    </span>
+                </div>
+
+                <div class="icheckbox_div">
+                    <span class="jqTransformRadioWrapper">
+                        <input type="radio" name="question17" value="2" onclick="onUserSelect(34, 2);">
+                        <label style="cursor: pointer;" class="option_label">女</label>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider18" style="display: none;">
+                <div class="title">
+                    <span class="qcid">18</span>18、您的年龄：
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question18" value="1" onclick="onUserSelect(35, 1);">
+                    <label style="cursor: pointer;" class="option_label">18-24 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question18" value="2" onclick="onUserSelect(35, 2);">
+                    <label style="cursor: pointer;" class="option_label">25-34</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question18" value="3" onclick="onUserSelect(35, 3);">
+                    <label style="cursor: pointer;" class="option_label">35-44 </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question18" value="4" onclick="onUserSelect(35, 4);">
+                    <label style="cursor: pointer;" class="option_label">45及以上</label>
+                </span>
+                </div>
+
+            </div>
+
+            <div class="matrix slider" id="slider19" style="display: none;">
+                <div class="title">
+                    <span class="qcid">19</span>19、您的信用卡额度：
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question19" value="1" onclick="onUserSelect(36, 1);">
+                    <label style="cursor: pointer;" class="option_label">1万元以下（含1万元） </label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question19" value="2" onclick="onUserSelect(36, 2);">
+                    <label style="cursor: pointer;" class="option_label">1万元至3万元（含3万元）</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question19" value="3" onclick="onUserSelect(36, 3);">
+                    <label style="cursor: pointer;" class="option_label">3万元至10万元（含10万元）</label>
+                </span>
+                </div>
+
+                <div class="icheckbox_div">
+                <span class="jqTransformRadioWrapper">
+                    <input type="radio" name="question19" value="4" onclick="onUserSelect(36, 4);">
+                    <label style="cursor: pointer;" class="option_label">10万元以上</label>
+                </span>
+                </div>
+
+            </div>
+
+            <div class="slider" id="slider-last"
+                 style="display: none; font-size: 30px; margin-top: 150px; text-align: center;">
+                问卷已经提交，感谢您的参与，祝您生活愉快！
+            </div>
+
+            <!--<div id="pages_box"></div>-->
+        </div>
+
+        <div class="wjhr"></div>
+
+        <div id="buttonlist" class="maxtop btns clear btn-container">
+
+            <!--<div class="WJButton wj_color" id="start_survey" style="display: none;">开始</div>
+            <div class="WJButton wj_color mRight" id="restart_survey" style=""> 重新开始&gt;&gt;</div>
+            <div class="WJButton wj_color" id="continue_survey" style="">继续答题 &gt;&gt;</div>-->
+            <div class="WJButton wj_color mRight btn prev-btn" id="prev_page" style="display: none;">
+                &lt;&lt;上一题
+            </div>
+            <div class="WJButton wj_color btn next-btn" id="next_page">
+                <span class="wj_word">下一题&gt;&gt;</span>
+                <span class="wj_number"></span>
+            </div>
+            <div class="WJButton wj_color btn submit-btn" id="final_submit" style="display: none;">
+                提交
+            </div>
+            <!--<div class="WJButton wj_color" id="reload_btn" style="display: none; margin: 0 auto; float: none;">重新加载</div>-->
+            <div class="Error_point" style="display: none;">请确保每道题目的答案有效</div>
+            <!--<div class="load_msg" id="load_msg" style="display: none;">问卷加载中 . . .</div>-->
+            <div class="load_msg mLeft10 dis_none" id="next_load"></div>
+
+            <div class="wjprogress">
+                <span class="progress-text">0%</span>
+
+                <div class="bar">
+                    <div class="barbox"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="jquery-hcheckbox.js"></script>
+    <script language="javascript">
+        $(function () {
+            $(".wjContent").jqTransform({imgPath: 'jqtransformplugin/img/'});
+        });
+    </script>
+
+    <script>
+        (function ($) {
+            var sliderNum = 20;
+            var curIndex = 0;
+            var transitionDuration = 10;
+            var isTransiting = false;
+            var answerData = {};
+
+            onUserSelect = function (question, answer) {
+                answerData[question] = answer;
+                //console.log (question, answer);
+            };
+
+            score_select = function (question, answer) {
+                for (var i = 1; i <= answer; i++) {
+                    var comp = "#Q" + question + "_" + i;
+                    $(comp).addClass("back_n");
+                }
+
+                for (var i = answer + 1; i <= 5; i++) {
+                    var comp = "#Q" + question + "_" + i;
+                    $(comp).removeClass("back_n");
+                }
+                answerData[question] = answer;
+                //console.log (question, answer);
+            };
+
+            function checkCurPageAnswer() {
+                if (curIndex < 14) {
+                    if (!!answerData[curIndex + 1]) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else if (curIndex === 14) {
+                    for (var i = 15; i < 24; ++i) {
+                        if (!answerData[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else if (curIndex === 15) {
+                    for (var i = 24; i < 29; ++i) {
+                        if (!answerData[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else if (curIndex === 16) {
+                    for (var i = 29; i < 34; ++i) {
+                        if (!answerData[i]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else {
+                    if (!!answerData[curIndex + 17]) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+
+            function updateProgress() {
+                var percent = parseInt(curIndex / sliderNum * 100) + '%';
+                $('.progress-text').html(percent);
+                $('.barbox').css('width', percent);
+            }
+
+            function getUserId() {
+                var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+", "g"));
+                if (!!result) {
+                    for (var i = 0; i < result.length; i++) {
+                        var idx = result[i].indexOf('un=');
+                        if (idx !== -1) {
+                            return parseInt(result[i].substring(idx + 3));
+                        }
+                    }
+                }
+                return -1;
+            }
+
+            $('.next-btn').on('click', function () {
+                if (isTransiting || curIndex >= sliderNum - 1) {
+                    return;
+                }
+                if (!checkCurPageAnswer()) {
+                    $('.Error_point').show();
+                    return;
+                }
+                $('.Error_point').hide();
+                isTransiting = true;
+                var curSlider = $('#slider' + curIndex);
+                var nextSlider = $('#slider' + (curIndex + 1));
+                nextSlider.css({'display': 'block', 'transform': 'translateX(100%)'});
+                curSlider.addClass('slide-transition');
+                nextSlider.addClass('slide-transition');
+                setTimeout(function () {
+                    curSlider.css('transform', 'translateX(-100%)');
+                    nextSlider.css('transform', 'translateX(0)');
+                    $('.prev-btn').show();
+                    if (++curIndex >= sliderNum - 1) {
+                        $('.next-btn').hide();
+                        $('.submit-btn').show();
+                    }
+                    else {
+                        $('.next-btn').show();
+                    }
+                    updateProgress();
+                }, 0);
+                setTimeout(function () {
+                    curSlider.removeClass('slide-transition');
+                    nextSlider.removeClass('slide-transition');
+                    curSlider.hide();
+                    isTransiting = false;
+                }, transitionDuration);
+            });
+
+            $('.prev-btn').on('click', function () {
+                if (isTransiting || curIndex <= 0) {
+                    return;
+                }
+                isTransiting = true;
+                var curSlider = $('#slider' + curIndex);
+                var prevSlider = $('#slider' + (curIndex - 1));
+                prevSlider.css({'display': 'block', 'transform': 'translateX(-100%)'});
+                curSlider.addClass('slide-transition');
+                prevSlider.addClass('slide-transition');
+                setTimeout(function () {
+                    curSlider.css('transform', 'translateX(100%)');
+                    prevSlider.css('transform', 'translateX(0)');
+                    $('.next-btn').show();
+                    $('.submit-btn').hide();
+                    if (--curIndex <= 0) {
+                        $('.prev-btn').hide();
+                    }
+                    else {
+                        $('.prev-btn').show();
+                    }
+                    updateProgress();
+                }, 0);
+                setTimeout(function () {
+                    curSlider.removeClass('slide-transition');
+                    prevSlider.removeClass('slide-transition');
+                    curSlider.hide();
+                    isTransiting = false;
+                }, transitionDuration);
+            });
+
+            $('.submit-btn').on('click', function () {
+                function onSuccess() {
+                    isTransiting = true;
+                    $('.prev-btn').hide();
+                    $('.next-btn').hide();
+                    $('.submit-btn').hide();
+                    var curSlider = $('#slider' + curIndex);
+                    var nextSlider = $('#slider-last');
+                    nextSlider.css({'display': 'block', 'transform': 'translateX(100%)'});
+                    curSlider.addClass('slide-transition');
+                    nextSlider.addClass('slide-transition');
+                    setTimeout(function () {
+                        ++curIndex;
+                        curSlider.css('transform', 'translateX(-100%)');
+                        nextSlider.css('transform', 'translateX(0)');
+                        updateProgress();
+                    }, 0);
+                    setTimeout(function () {
+                        curSlider.removeClass('slide-transition');
+                        nextSlider.removeClass('slide-transition');
+                        curSlider.hide();
+                        isTransiting = false;
+                    }, transitionDuration);
+                }
+
+                // check answer data
+                if (isTransiting) {
+                    return;
+                }
+                if (!checkCurPageAnswer()) {
+                    $('.Error_point').show();
+                    return;
+                }
+                $('.Error_point').hide();
+                // submit to server
+                var uiOnly = false;
+                answerData[0] = getUserId();
+                console.log('submit data', answerData);
+                if (uiOnly) {
+                    // send data success
+                    onSuccess();
+                }
+                else {
+                    $.ajax({
+                        type: "post",
+                        url: "/ccbSurveys/add",
+                        data: answerData,
+                        dataType: "json",
+                        success: function (json) {
+                            // send data success
+                            onSuccess();
+                        },
+                        error: function (err) {
+                            if (err.status === 200) {
+                                onSuccess();
+                            }
+                            //console.error(err, err.status);
+                            //alert("提交失败，请检查您的网络设置");
+                        }
+
+                    });
+                }
+            });
+
+        })(jQuery);
+    </script>
+</div>
+
+</body>
+</html>

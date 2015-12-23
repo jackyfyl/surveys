@@ -34,4 +34,14 @@ class AppController extends Controller {
     public $components = array(
         'DebugKit.Toolbar'
     );
+	
+	protected function isJsonOrXmlExt() {
+        if (isset($this->params['ext']) && ($this->params['ext'] == 'json' || $this->params['ext'] == 'xml')) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

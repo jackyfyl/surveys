@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>Testing</title>
+</head>
+
+<body>
+    <script src="/js/jquery-1.11.3.min.js"></script>
+	
+    <script>
+	$.ajax({
+		type: "post",
+		url: "/surveys/delete/18.json",
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			document.write(JSON.stringify(json));
+		},
+		error: function (err) {
+			if (err.status === 200) {
+				console.error(err);
+			}
+			//console.error(err, err.status);
+			//alert("提交失败，请检查您的网络设置");
+		}
+
+	});
+
+    </script>
+
+</body>
+</html>

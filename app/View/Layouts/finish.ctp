@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<?php echo $this->Html->charset(); ?>
@@ -8,8 +8,7 @@
 	<?php
 		echo $this->Html->meta('icon');
 	?>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <script src="/js/jquery-1.11.3.min.js"></script>
 <style type="text/css">
 	
@@ -40,10 +39,8 @@ $(function(){
 		}
 	})
 });	
- 
-
-
 </script>
+
 </head>
 <body>
 			<?php echo $this->fetch('content'); ?>

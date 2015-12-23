@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>Testing</title>
+</head>
+
+<body>
+    <script src="/js/jquery-1.11.3.min.js"></script>
+	
+    <script>
+	var answerData = {};
+	answerData['Survey'] = {};
+	
+	answerData['Survey']['wxopenid']='oB4nYjnoHhuWrPVi2pYLuPjnCaU0'; 
+	answerData['Survey']['userid']='a100'; 
+	answerData['Survey']['user_agent']='iPhone6'; 
+	answerData['Survey']['q01']='1'; 
+	answerData['Survey']['q02']='3'; 
+	answerData['Survey']['q03']='abcd';
+	var x = "q"; 
+	for (i = 10; i <= 50; i++) {
+		answerData['Survey'][x+ i.toString()] = 'answser' + i; 
+	}
+	$.ajax({
+		type: "post",
+		url: "/surveys/add.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			document.write(JSON.stringify(json));
+		},
+		error: function (err) {
+			if (err.status === 200) {
+				console.error(err);
+			}
+			//console.error(err, err.status);
+			//alert("提交失败，请检查您的网络设置");
+		}
+
+	});
+
+    </script>
+
+</body>
+</html>

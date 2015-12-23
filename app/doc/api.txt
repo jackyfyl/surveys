@@ -1,0 +1,24 @@
+API
+
+---------------------------------------
+Get an object:
+
+GET http://www.example.com/surveys/view/12.json
+
+---------------------------------------
+
+Add an object:
+
+POST http://www.example.com/surveys/add.json
+
+---------------------------------------
+
+Edit an object:
+
+POST http://www.example.com/surveys/edit/12.json
+
+---------------------------------------
+
+Delete an object:
+
+POST http://www.example.com/surveys/delete/12.json
