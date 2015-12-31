@@ -1,18 +1,18 @@
 <?php
 App::uses('AppController', 'Controller');
 /**
- * Surveys Controller
+ * Suishiwens Controller
  *
- * @property Survey $Survey
+ * @Property Suishiwen $Suishiwen
  * @property PaginatorComponent $Paginator
  */
-class SurveysController extends AppController {
+class SuishiwensController extends AppController {
 
 	public $components = array('Paginator', 'RequestHandler', 'Session');
 
 	public function index() {
-		$this->Survey->recursive = 0;
-		$this->set('surveys', $this->Paginator->paginate());
+		$this->Suishiwen->recursive = 0;
+		$this->set('suishiwens', $this->Paginator->paginate());
 		if ($this->isJsonOrXmlExt()){
 			$this->set('_serialize', array_keys($this->viewVars));
 		}
@@ -23,23 +23,23 @@ class SurveysController extends AppController {
 	}
 
 	public function view($id = null) {
-		if (!$this->Survey->exists($id)) {
+		if (!$this->Suishiwen->exists($id)) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
-		$options = array('conditions' => array('Survey.' . $this->Survey->primaryKey => $id));
-		$this->set('survey', $this->Survey->find('first', $options));
+		$options = array('conditions' => array('Suishiwen.' . $this->Suishiwen->primaryKey => $id));
+		$this->set('survey', $this->Suishiwen->find('first', $options));
 		if ($this->isJsonOrXmlExt()){
 			$this->set('_serialize', array_keys($this->viewVars));
 		}
 	}
 
 	public function add() {
-		debug($this->request->data);
+		//debug($this->request->data);
 		if ($this->request->is('post')) {
-			$this->Survey->create();
-			if ($this->Survey->save($this->request->data)) {
+			$this->Suishiwen->create();
+			if ($this->Suishiwen->save($this->request->data)) {
 				if ($this->isJsonOrXmlExt()){
-					$this->set('id', $this->Survey->id);
+					$this->set('id', $this->Suishiwen->id);
 					$this->set('_serialize', array_keys($this->viewVars));
 					return;
 				} else {
@@ -60,12 +60,12 @@ class SurveysController extends AppController {
 	}
 
 	public function edit($id = null) {
-		if (!$this->Survey->exists($id)) {
+		if (!$this->Suishiwen->exists($id)) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
 		$this->request->data[$this->modelClass]['id'] = $id;
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Survey->save($this->request->data)) {
+			if ($this->Suishiwen->save($this->request->data)) {
 				if ($this->isJsonOrXmlExt()){
 					$this->set('result', 'success');
 					$this->set('_serialize', array_keys($this->viewVars));
@@ -85,18 +85,18 @@ class SurveysController extends AppController {
 				}
 			}
 		} else {
-			$options = array('conditions' => array('Survey.' . $this->Survey->primaryKey => $id));
-			$this->request->data = $this->Survey->find('first', $options);
+			$options = array('conditions' => array('Suishiwen.' . $this->Suishiwen->primaryKey => $id));
+			$this->request->data = $this->Suishiwen->find('first', $options);
 		}
 	}
 
 	public function delete($id = null) {
-		$this->Survey->id = $id;
-		if (!$this->Survey->exists()) {
+		$this->Suishiwen->id = $id;
+		if (!$this->Suishiwen->exists()) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
 		$this->request->allowMethod('post', 'delete');
-		if ($this->Survey->delete()) {
+		if ($this->Suishiwen->delete()) {
 			if ($this->isJsonOrXmlExt()){
 				$this->set('result', 'success');
 				$this->set('_serialize', array_keys($this->viewVars));

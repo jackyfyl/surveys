@@ -1,0 +1,117 @@
+<?php
+App::uses('AppController', 'Controller');
+/**
+ * Suishiwens Controller
+ *
+ * @property Suishiwen $Suishiwen
+ * @property PaginatorComponent $Paginator
+ * @property RequestHandlerComponent $RequestHandler
+ * @property SessionComponent $Session
+ */
+class SuishiwensController extends AppController {
+
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator', 'RequestHandler', 'Session');
+
+	public function beforeFilter() {
+		// Allow xiumi.com to 
+		header("Access-Control-Allow-Origin: *");
+	}
+
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function index() {
+		$this->Suishiwen->recursive = 0;
+		$this->set('suishiwens', $this->Paginator->paginate());
+		if ($this->isJsonOrXmlExt()){
+			$this->set('_serialize', array_keys($this->viewVars));
+		}
+	}
+
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function view($id = null) {
+		if (!$this->Suishiwen->exists($id)) {
+			throw new NotFoundException(__('Invalid suishiwen'));
+		}
+		$options = array('conditions' => array('Suishiwen.' . $this->Suishiwen->primaryKey => $id));
+		$this->set('suishiwen', $this->Suishiwen->find('first', $options));
+		if ($this->isJsonOrXmlExt()){
+			$this->set('_serialize', array_keys($this->viewVars));
+		}
+	}
+
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		if ($this->request->is('post')) {
+			$this->Suishiwen->create();
+			if ($this->Suishiwen->save($this->request->data)) {
+				$this->Session->setFlash(__('The suishiwen has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The suishiwen could not be saved. Please, try again.'));
+			}
+		}
+	}
+
+/**
+ * edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function edit($id = null) {
+		if (!$this->Suishiwen->exists($id)) {
+			throw new NotFoundException(__('Invalid suishiwen'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Suishiwen->save($this->request->data)) {
+				$this->Session->setFlash(__('The suishiwen has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The suishiwen could not be saved. Please, try again.'));
+			}
+		} else {
+			$options = array('conditions' => array('Suishiwen.' . $this->Suishiwen->primaryKey => $id));
+			$this->request->data = $this->Suishiwen->find('first', $options);
+		}
+	}
+
+/**
+ * delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function delete($id = null) {
+		$this->Suishiwen->id = $id;
+		if (!$this->Suishiwen->exists()) {
+			throw new NotFoundException(__('Invalid suishiwen'));
+		}
+		$this->request->allowMethod('post', 'delete');
+		if ($this->Suishiwen->delete()) {
+			$this->Session->setFlash(__('The suishiwen has been deleted.'));
+		} else {
+			$this->Session->setFlash(__('The suishiwen could not be deleted. Please, try again.'));
+		}
+		return $this->redirect(array('action' => 'index'));
+	}
+}
