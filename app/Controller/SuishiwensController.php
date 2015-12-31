@@ -17,7 +17,7 @@ class SuishiwensController extends AppController {
 			$this->set('_serialize', array_keys($this->viewVars));
 		}
 	}
-	
+
 	public function beforeFilter() {
 		header("Access-Control-Allow-Origin: *");
 	}
@@ -115,5 +115,44 @@ class SuishiwensController extends AppController {
 			}
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+
+	public function dashboard($page_id = null) {
+	// check ssw_page_status data row
+
+	// read ssw_page_status
+
+	// statistic
+	$count_all= $this->Suishiwen->find('count',
+		array(
+			'conditions' =>
+				 array('page_id' => $page_id)
+		)
+	);
+	$this->set('count_all', $count_all);
+
+	$count_finished = $this->Suishiwen->find('count',
+		array(
+			'conditions' =>
+				array('page_id' => $page_id,
+					'bFinished' => '1'
+				)
+			)
+	);
+
+	$this->set('count_finished', $count_finished);
+
+	$count_unfinished = $this->Suishiwen->find('count',
+		array(
+			'conditions' =>
+				 array('page_id' => $page_id,
+					'bFinished' => '0'
+				)
+			)
+	);
+	$this->set('count_unfinished', $count_unfinished);
+
+	// link to download
+
 	}
 }
