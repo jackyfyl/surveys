@@ -34,7 +34,8 @@ class SuishiwensController extends AppController {
 	}
 
 	public function add() {
-		//debug($this->request->data);
+		$this->log($this->request->data);
+
 		if ($this->request->is('post')) {
 			$this->Suishiwen->create();
 			if ($this->Suishiwen->save($this->request->data)) {
