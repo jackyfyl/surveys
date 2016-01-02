@@ -1,4 +1,8 @@
 <?php
+App::import('Vendor', 'Classes/PHPExcel');
+// require_once(__DIR__ . '/../Vendor/Classes/PHPExcel.php');
+//require_once(__DIR__ . '/../Vendor/Classes/PHPExcel/Writer/Excel2007.php');
+
 App::uses('AppController', 'Controller');
 /**
  * Suishiwens Controller
@@ -119,9 +123,22 @@ class SuishiwensController extends AppController {
 
 	public function dashboard($page_id = null) {
 	// check ssw_page_status data row
-
-	// read ssw_page_status
-
+	$this->loadModel('SswPageStatus');
+	$found = $this->SswPageStatus->findByPageId($page_id);
+	if (empty($found)) {
+		// create a new object
+		$this->SswPageStatus->create();
+		$this->SswPageStatus->set('page_id', $page_id);
+		$page_status = 'online';
+		$this->SswPageStatus->set('status', $page_status);
+		$this->SswPageStatus->save();
+	}
+	else {
+		// read ssw_page_status
+		$page_status = $found['SswPageStatus']['status'];
+	}
+	$this->set('page_status', $page_status);
+	
 	// statistic
 	$count_all= $this->Suishiwen->find('count',
 		array(
@@ -152,7 +169,47 @@ class SuishiwensController extends AppController {
 	);
 	$this->set('count_unfinished', $count_unfinished);
 
+	// Other data
+	$this->set('page_id', $page_id);
+
 	// link to download
 
+	}
+
+	public function download_rawdata($page_id = null) {
+		if (!$this->Suishiwen->findByPageId($page_id)) {
+			throw new NotFoundException(__('Invalid survey'));
+		}
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->setActiveSheetIndex(0)
+		->setCellValue('A1', 'Hello')
+		->setCellValue('B2', 'world!')
+		->setCellValue('C1', 'Hello')
+		->setCellValue('D2', 'world!');
+
+		$objPHPExcel->setActiveSheetIndex(0)
+		->setCellValue('A4', 'Miscellaneous glyphs')
+		->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
+
+		// Save Excel 2007 file
+		//debug("Write to Excel2007 format");
+		$callStartTime = microtime(true);
+
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		Configure::write('debug', 0);
+		$this->layout = 'blank';
+		$this->render('blank');
+
+	   header("Content-Type: application/force-download"); 
+	   header("Content-Type: application/octet-stream"); 
+	   header("Content-Type: application/download"); 
+	   header('Content-Disposition:inline;filename="data.xlsx"'); 
+	   header("Content-Transfer-Encoding: binary"); 
+	   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); 
+	   header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
+	   header("Pragma: no-cache");
+
+		$objWriter->save('php://output');
+		CakeResponse::download('php://output');
 	}
 }
