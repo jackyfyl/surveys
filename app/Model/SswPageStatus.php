@@ -28,21 +28,4 @@ class SswPageStatus extends AppModel {
  */
 	public $displayField = 'page_id';
 
-
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
-/**
- * belongsTo associations
- *
- * @var array
- */
-	public $belongsTo = array(
-		'Suishiwen' => array(
-			'className' => 'Suishiwen',
-			'foreignKey' => 'page_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
 }
