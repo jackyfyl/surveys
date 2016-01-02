@@ -14,7 +14,7 @@ class SswPageStatusesController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'RequestHandler');
+	public $components = array('Paginator', 'RequestHandler', 'Session');
 
 /**
  * index method
@@ -73,14 +73,16 @@ class SswPageStatusesController extends AppController {
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->SswPageStatus->save($this->request->data)) {
-				return $this->flash(__('The ssw page status has been saved.'), array('action' => 'index'));
+				debug($this->request->data);
+				if (!empty($this->request->data['redirect'])) {
+					return $this->redirect($this->request->data['redirect']);
+				}
+				return $this->Session->setFlash(__('The status has been saved.'));;
 			}
 		} else {
 			$options = array('conditions' => array('SswPageStatus.' . $this->SswPageStatus->primaryKey => $id));
 			$this->request->data = $this->SswPageStatus->find('first', $options);
 		}
-		$suishiwens = $this->SswPageStatus->Suishiwen->find('list');
-		$this->set(compact('suishiwens'));
 	}
 
 /**

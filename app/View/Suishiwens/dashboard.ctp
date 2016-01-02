@@ -1,6 +1,35 @@
 <div class="suishiwens">
-	<h2><?php echo __('问卷状态'); ?></h2>
-		<?php echo $this->Form->button(__('New Suishiwen'), array('action' => 'add')); ?>
+	<h2><?php echo __('问卷 '.$page_id.' 状态'); ?></h2>
+<?php if ($page_status == 'offline') {
+?>
+	<h3>下线</h3> 
+<?php
+}
+else {?>
+	<h3>在线</h3>
+<?php
+}
+?>
+
+	<form action="/SswPageStatuses/edit/<?php echo $page_id;?>" method="POST">
+
+<?php if ($page_status == 'offline') {
+?>
+	<input type="hidden" name="data[SswPageStatus][page_id]" value="<?php echo $page_id;?>"></input>
+	<input type="hidden" name="data[SswPageStatus][status]" value="online"></input>
+	<input type="hidden" name="redirect" value="/suishiwens/dashboard/<?php echo $page_id;?>"></input>
+	<button type="submit">上线</button> 
+<?php
+}
+else {?>
+	<input type="hidden" name="data[SswPageStatus][page_id]" value="<?php echo $page_id;?>"></input>
+	<input type="hidden" name="data[SswPageStatus][status]" value="offline"></input>
+	<input type="hidden" name="redirect" value="/suishiwens/dashboard/<?php echo $page_id;?>"></input>
+	<button type="submit">下线</button> 
+<?php
+}
+?>
+</form>
 </br>&nbsp;
 </div>
 
@@ -21,6 +50,6 @@
 		<td><?php echo h($count_all); ?>&nbsp;</td>
 		<td><?php echo h($count_finished); ?>&nbsp;</td>
 		<td><?php echo h($count_unfinished); ?>&nbsp;</td>
-		<td><?php echo floor($count_finished/$count_all*100); ?>%</td>
+		<td><?php echo ($count_all == 0)?'-':floor($count_finished/$count_all*100).'%'; ?></td>
 	</table>
 </div>
