@@ -138,7 +138,7 @@ class SuishiwensController extends AppController {
 		$page_status = $found['SswPageStatus']['status'];
 	}
 	$this->set('page_status', $page_status);
-	
+
 	// statistic
 	$count_all= $this->Suishiwen->find('count',
 		array(
@@ -180,34 +180,67 @@ class SuishiwensController extends AppController {
 		if (!$this->Suishiwen->findByPageId($page_id)) {
 			throw new NotFoundException(__('Invalid survey'));
 		}
+		// receive data
+		$data = $this->Suishiwen->findAllByPageId($page_id);
+		if(count($data) == 0) {
+			$this->Session->setFlash('没有数据');
+			return $this->redirect(array('action' => 'dashboard'));
+		}
+
 		$objPHPExcel = new PHPExcel();
-		$objPHPExcel->setActiveSheetIndex(0)
-		->setCellValue('A1', 'Hello')
-		->setCellValue('B2', 'world!')
-		->setCellValue('C1', 'Hello')
-		->setCellValue('D2', 'world!');
 
-		$objPHPExcel->setActiveSheetIndex(0)
-		->setCellValue('A4', 'Miscellaneous glyphs')
-		->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
+		$column_name = array();
+		for ($i=1; $i <= 26; $i++) {
+			$column_name[$i] = chr(64 + $i);
+		}
+		for ($i=27; $i <= 52; $i++) {
+			$column_name[$i] = 'A'.chr(64 - 26 + $i);
+		}
+		for ($i=53; $i <= 78; $i++) {
+			$column_name[$i] = 'B'.chr(64 - 26 * 2 + $i);
+		}
 
-		// Save Excel 2007 file
-		//debug("Write to Excel2007 format");
-		$callStartTime = microtime(true);
+		$obj = $objPHPExcel->setActiveSheetIndex(0);
+		$obj->setCellValue('A1', 'page_id');
+		$obj->setCellValue('B1', 'page_name');
+		$obj->setCellValue('C1', 'start_time');
+		$obj->setCellValue('D1', 'end_time');
+		$obj->setCellValue('E1', 'bfinished');
+		$obj->setCellValue('F1', 'userid');
+
+		for ($i = 7, $j = 1; $i <= 56; $i++, $j = $j + 2) {
+			$obj->setCellValue($column_name[$i].'1', $data[0]['Suishiwen']['q'.sprintf ("%02d", $j)]);
+		}
+
+		$row = 2;
+		foreach ($data as $key => $value) {
+			$obj->setCellValue('A'.$row, $value['Suishiwen']['page_id']);
+			$obj->setCellValue('B'.$row, $value['Suishiwen']['page_name']);
+			$obj->setCellValue('C'.$row, $value['Suishiwen']['start_time']);
+			$obj->setCellValue('D'.$row, $value['Suishiwen']['end_time']);
+			$obj->setCellValue('E'.$row, $value['Suishiwen']['bfinished']);
+			$obj->setCellValue('F'.$row, $value['Suishiwen']['userid']);
+			for ($i = 7, $j = 2; $i <= 56; $i++, $j = $j + 2) {
+				$obj->setCellValue($column_name[$i].$row, $value['Suishiwen']['q'.sprintf ("%02d", $j)]);
+			}
+			$row++;
+		}
 
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+
+		// Disable debug info and templates that prevent download steam.
 		Configure::write('debug', 0);
 		$this->layout = 'blank';
 		$this->render('blank');
 
-	   header("Content-Type: application/force-download"); 
-	   header("Content-Type: application/octet-stream"); 
-	   header("Content-Type: application/download"); 
-	   header('Content-Disposition:inline;filename="data.xlsx"'); 
-	   header("Content-Transfer-Encoding: binary"); 
-	   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); 
-	   header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
-	   header("Pragma: no-cache");
+		header("Content-Type: application/force-download");
+		header("Content-Type: application/octet-stream");
+		header("Content-Type: application/download");
+		header('Content-Disposition:inline;filename="data.xlsx"');
+		header("Content-Transfer-Encoding: binary");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Pragma: no-cache");
 
 		$objWriter->save('php://output');
 		CakeResponse::download('php://output');
