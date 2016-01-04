@@ -55,7 +55,16 @@ else {?>
 </div>
 
 <div>
-	<h2><?php echo __('下载原始数据'); ?></h2>
 <br>&nbsp;
-<a href="/Suishiwens/download_rawdata/<?php echo $page_id;?>">开始下载</a>
+	<h2>下载原始数据</h2>
+<?php if ($count_all == 0) { ?>
+	没有数据可以下载
+<?php
+}
+else { ?>
+	<a href="/Suishiwens/download_rawdata/<?php echo $page_id;?>">开始下载</a>
+<?php
+}
+?>
+<br>&nbsp;
 </div>
