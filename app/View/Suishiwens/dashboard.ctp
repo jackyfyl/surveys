@@ -53,3 +53,9 @@ else {?>
 		<td><?php echo ($count_all == 0)?'-':floor($count_finished/$count_all*100).'%'; ?></td>
 	</table>
 </div>
+
+<div>
+	<h2><?php echo __('下载原始数据'); ?></h2>
+<br>&nbsp;
+<a href="/Suishiwens/download_rawdata/<?php echo $page_id;?>">开始下载</a>
+</div>

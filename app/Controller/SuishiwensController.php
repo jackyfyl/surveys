@@ -216,8 +216,10 @@ class SuishiwensController extends AppController {
 		foreach ($data as $key => $value) {
 			$obj->setCellValue('A'.$row, $value['Suishiwen']['page_id']);
 			$obj->setCellValue('B'.$row, $value['Suishiwen']['page_name']);
-			$obj->setCellValue('C'.$row, $value['Suishiwen']['start_time']);
-			$obj->setCellValue('D'.$row, $value['Suishiwen']['end_time']);
+			$obj->setCellValue('C'.$row, ($value['Suishiwen']['start_time']/1000+8*3600)/86400+70*365+19);
+			$obj->getStyle('C'.$row)->getNumberFormat()->setFormatCode('yy/mm/dd h:mm:ss;@');
+			$obj->setCellValue('D'.$row, ($value['Suishiwen']['end_time']/1000+8*3600)/86400+70*365+19);
+			$obj->getStyle('D'.$row)->getNumberFormat()->setFormatCode('yy/mm/dd h:mm:ss;@');
 			$obj->setCellValue('E'.$row, $value['Suishiwen']['bfinished']);
 			$obj->setCellValue('F'.$row, $value['Suishiwen']['userid']);
 			for ($i = 7, $j = 2; $i <= 56; $i++, $j = $j + 2) {
