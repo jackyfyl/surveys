@@ -12,7 +12,7 @@
 	<?php foreach ($sswPageStatuses as $sswPageStatus): ?>
 	<tr>
 		<td>
-			<?php echo $this->Html->link($sswPageStatus['Suishiwen']['page_name'], array('controller' => 'suishiwens', 'action' => 'view', $sswPageStatus['Suishiwen']['id'])); ?>
+			<?php echo $this->Html->link($sswPageStatus['SswPageStatus']['page_id'], array('controller' => 'sswPageStatuses', 'action' => 'view', $sswPageStatus['SswPageStatus']['page_id'])); ?>
 		</td>
 		<td><?php echo h($sswPageStatus['SswPageStatus']['status']); ?>&nbsp;</td>
 		<td class="actions">
@@ -42,7 +42,5 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Ssw Page Status'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Suishiwens'), array('controller' => 'suishiwens', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Suishiwen'), array('controller' => 'suishiwens', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

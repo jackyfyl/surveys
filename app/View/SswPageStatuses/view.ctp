@@ -3,7 +3,7 @@
 	<dl>
 		<dt><?php echo __('Suishiwen'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($sswPageStatus['Suishiwen']['page_name'], array('controller' => 'suishiwens', 'action' => 'view', $sswPageStatus['Suishiwen']['id'])); ?>
+			<?php echo $this->Html->link($sswPageStatus['SswPageStatus']['page_id'], array('controller' => 'SswPageStatuses', 'action' => 'view', $sswPageStatus['SswPageStatus']['page_id'])); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Status'); ?></dt>
@@ -20,7 +20,5 @@
 		<li><?php echo $this->Form->postLink(__('Delete Ssw Page Status'), array('action' => 'delete', $sswPageStatus['SswPageStatus']['page_id']), array(), __('Are you sure you want to delete # %s?', $sswPageStatus['SswPageStatus']['page_id'])); ?> </li>
 		<li><?php echo $this->Html->link(__('List Ssw Page Statuses'), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Ssw Page Status'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Suishiwens'), array('controller' => 'suishiwens', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Suishiwen'), array('controller' => 'suishiwens', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
