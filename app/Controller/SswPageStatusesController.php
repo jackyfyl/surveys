@@ -42,6 +42,9 @@ class SswPageStatusesController extends AppController {
 		}
 		$options = array('conditions' => array('SswPageStatus.' . $this->SswPageStatus->primaryKey => $id));
 		$this->set('sswPageStatus', $this->SswPageStatus->find('first', $options));
+		if ($this->isJsonOrXmlExt()){
+			$this->set('_serialize', array_keys($this->viewVars));
+		}
 	}
 
 /**
@@ -50,14 +53,30 @@ class SswPageStatusesController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->log($this->request->data);
+
 		if ($this->request->is('post')) {
 			$this->SswPageStatus->create();
 			if ($this->SswPageStatus->save($this->request->data)) {
-				return $this->flash(__('The ssw page status has been saved.'), array('action' => 'index'));
+				if ($this->isJsonOrXmlExt()){
+					$this->set('id', $this->SswPageStatus->id);
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				} else {
+					$this->Session->setFlash(__('The data has been saved.'));
+					return $this->redirect(array('action' => 'index'));
+				}
+			} else {
+				if ($this->isJsonOrXmlExt()){
+					$this->set('error', 'The data could not be saved. Please, try again.');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				}
+				else {
+					$this->Session->setFlash(__('The data could not be saved. Please, try again.'));
+				}
 			}
 		}
-		$suishiwens = $this->SswPageStatus->Suishiwen->find('list');
-		$this->set(compact('suishiwens'));
 	}
 
 /**
@@ -69,15 +88,33 @@ class SswPageStatusesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->SswPageStatus->exists($id)) {
-			throw new NotFoundException(__('Invalid ssw page status'));
+			throw new NotFoundException(__('Invalid data'));
 		}
+		$this->request->data[$this->modelClass]['id'] = $id;
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->SswPageStatus->save($this->request->data)) {
-				debug($this->request->data);
-				if (!empty($this->request->data['redirect'])) {
-					return $this->redirect($this->request->data['redirect']);
+				if ($this->isJsonOrXmlExt()){
+					$this->set('result', 'success');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				} else {
+	                if (!empty($this->request->data['redirect'])) {
+	                    return $this->redirect($this->request->data['redirect']);
+					}
+					else {
+						$this->Session->setFlash(__('The data has been saved.'));
+						return $this->redirect(array('action' => 'index'));
+					}
 				}
-				return $this->Session->setFlash(__('The status has been saved.'));;
+			} else {
+				if ($this->isJsonOrXmlExt()){
+					$this->set('error', 'The data could not be saved. Please, try again.');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				}
+				else {
+					$this->Session->setFlash(__('The data could not be saved. Please, try again.'));
+				}
 			}
 		} else {
 			$options = array('conditions' => array('SswPageStatus.' . $this->SswPageStatus->primaryKey => $id));
@@ -95,13 +132,26 @@ class SswPageStatusesController extends AppController {
 	public function delete($id = null) {
 		$this->SswPageStatus->id = $id;
 		if (!$this->SswPageStatus->exists()) {
-			throw new NotFoundException(__('Invalid ssw page status'));
+			throw new NotFoundException(__('Invalid data'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->SswPageStatus->delete()) {
-			return $this->flash(__('The ssw page status has been deleted.'), array('action' => 'index'));
+			if ($this->isJsonOrXmlExt()){
+				$this->set('result', 'success');
+				$this->set('_serialize', array_keys($this->viewVars));
+				return;
+			} else {
+				$this->Session->setFlash(__('The data has been deleted.'));
+			}
 		} else {
-			return $this->flash(__('The ssw page status could not be deleted. Please, try again.'), array('action' => 'index'));
+			if ($this->isJsonOrXmlExt()){
+				$this->set('error', 'The data could not be deleted. Please, try again.');
+				$this->set('_serialize', array_keys($this->viewVars));
+				return;
+			} else {
+				$this->Session->setFlash(__('The data could not be deleted. Please, try again.'));
+			}
 		}
+		return $this->redirect(array('action' => 'index'));
 	}
 }

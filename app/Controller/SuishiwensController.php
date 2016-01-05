@@ -31,7 +31,7 @@ class SuishiwensController extends AppController {
 			throw new NotFoundException(__('Invalid survey'));
 		}
 		$options = array('conditions' => array('Suishiwen.' . $this->Suishiwen->primaryKey => $id));
-		$this->set('survey', $this->Suishiwen->find('first', $options));
+		$this->set('suishiwen', $this->Suishiwen->find('first', $options));
 		if ($this->isJsonOrXmlExt()){
 			$this->set('_serialize', array_keys($this->viewVars));
 		}
@@ -41,6 +41,31 @@ class SuishiwensController extends AppController {
 		$this->log($this->request->data);
 
 		if ($this->request->is('post')) {
+			// check page status
+			$page_id = $this->request->data['Suishiwen']['page_id'];
+			$this->loadModel('SswPageStatus');
+			$result = $this->SswPageStatus->findByPageId($page_id);
+			if (empty($result)){
+				if ($this->isJsonOrXmlExt()){
+					$this->set('error', 'Survey doesn\'t exist or is offline');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				}
+				else {
+					throw new NotFoundException(__('Survey doesn\'t exist or is offline'));
+				}
+			}
+			if ($result['SswPageStatus']['status'] == 'offline') {
+				if ($this->isJsonOrXmlExt()){
+					$this->set('error', 'Survey doesn\'t exist or is offline');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				}
+				else {
+					throw new NotFoundException(__('Survey doesn\'t exist or is offline'));
+				}
+			}
+
 			$this->Suishiwen->create();
 			if ($this->Suishiwen->save($this->request->data)) {
 				if ($this->isJsonOrXmlExt()){
