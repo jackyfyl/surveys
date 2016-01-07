@@ -147,58 +147,57 @@ class SuishiwensController extends AppController {
 	}
 
 	public function dashboard($page_id = null) {
-	// check ssw_page_status data row
-	$this->loadModel('SswPageStatus');
-	$found = $this->SswPageStatus->findByPageId($page_id);
-	if (empty($found)) {
-		// create a new object
-		$this->SswPageStatus->create();
-		$this->SswPageStatus->set('page_id', $page_id);
-		$page_status = 'online';
-		$this->SswPageStatus->set('status', $page_status);
-		$this->SswPageStatus->save();
-	}
-	else {
-		// read ssw_page_status
-		$page_status = $found['SswPageStatus']['status'];
-	}
-	$this->set('page_status', $page_status);
+		// check ssw_page_status data row
+		$this->loadModel('SswPageStatus');
+		$found = $this->SswPageStatus->findByPageId($page_id);
+		if (empty($found)) {
+			// create a new object
+			$this->SswPageStatus->create();
+			$this->SswPageStatus->set('page_id', $page_id);
+			$page_status = 'online';
+			$this->SswPageStatus->set('status', $page_status);
+			$this->SswPageStatus->save();
+		}
+		else {
+			// read ssw_page_status
+			$page_status = $found['SswPageStatus']['status'];
+		}
+		$this->set('page_status', $page_status);
 
-	// statistic
-	$count_all= $this->Suishiwen->find('count',
-		array(
-			'conditions' =>
-				 array('page_id' => $page_id)
-		)
-	);
-	$this->set('count_all', $count_all);
-
-	$count_finished = $this->Suishiwen->find('count',
-		array(
-			'conditions' =>
-				array('page_id' => $page_id,
-					'bFinished' => '1'
-				)
+		// statistic
+		$count_all= $this->Suishiwen->find('count',
+			array(
+				'conditions' =>
+					 array('page_id' => $page_id)
 			)
-	);
+		);
+		$this->set('count_all', $count_all);
 
-	$this->set('count_finished', $count_finished);
-
-	$count_unfinished = $this->Suishiwen->find('count',
-		array(
-			'conditions' =>
-				 array('page_id' => $page_id,
-					'bFinished' => '0'
+		$count_finished = $this->Suishiwen->find('count',
+			array(
+				'conditions' =>
+					array('page_id' => $page_id,
+						'bFinished' => '1'
+					)
 				)
-			)
-	);
-	$this->set('count_unfinished', $count_unfinished);
+		);
 
-	// Other data
-	$this->set('page_id', $page_id);
+		$this->set('count_finished', $count_finished);
 
-	// link to download
+		$count_unfinished = $this->Suishiwen->find('count',
+			array(
+				'conditions' =>
+					 array('page_id' => $page_id,
+						'bFinished' => '0'
+					)
+				)
+		);
+		$this->set('count_unfinished', $count_unfinished);
 
+		// Other data
+		$this->set('page_id', $page_id);
+
+		$this->layout = 'suishiwen';
 	}
 
 	public function download_rawdata($page_id = null) {
