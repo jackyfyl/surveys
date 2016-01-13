@@ -115,4 +115,44 @@ class SurveysController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+	public function add2() {
+		if ($this->request->is('post')) {
+			// check survey_validation
+			$column_name = 'q03';
+			$surveyname = $this->request->data['Survey']['q01'];
+			$phone = $this->request->data['Survey'][$column_name];
+
+			$this->loadModel("SurveyValidation");
+			echo $this->SurveyValidation->exists_one($surveyname, $column_name, $phone);
+
+			return;
+			
+			$this->Survey->create();
+			if ($this->Survey->save($this->request->data)) {
+				// check if finished
+
+				// 
+
+
+				if ($this->isJsonOrXmlExt()){
+					$this->set('id', $this->Survey->id);
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				} else {
+					$this->Session->setFlash(__('The survey has been saved.'));
+					return $this->redirect(array('action' => 'index'));
+				}
+			} else {
+				if ($this->isJsonOrXmlExt()){
+					$this->set('error', 'The survey could not be saved. Please, try again.');
+					$this->set('_serialize', array_keys($this->viewVars));
+					return;
+				}
+				else {
+					$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+				}
+			}
+		}
+	}
 }
