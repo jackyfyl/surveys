@@ -167,7 +167,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array('id <=' => $id);
+					$conditions = array('id <=' => $id, $finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
@@ -230,17 +230,23 @@ class SurveysController extends AppController {
 				}
 			}
 
-			$conditions = array($survey_name_column => $surveyname, $user_name_column => $user_name, 'id <>' => $id);
-			$this->set($survey_name_column, $surveyname);
-			$this->set($user_name_column, $user_name);
-			$count = $this->Survey->find('count', array('conditions' => $conditions));
-			if ($count > 0) {
-				if ($this->isJsonOrXmlExt()){
-					$this->set('error', 'user exists.');
-					$this->set('_serialize', array_keys($this->viewVars));
-					return;
-				} else {
-					$this->Session->setFlash(__('user exists.'));
+			$old_user_name = $this->Survey->read($user_name_column);
+			if ($old_user_name != $surveyname) {
+				$conditions = array($survey_name_column => $surveyname,
+					$user_name_column => $user_name,
+					'id <>' => $id,
+					$finished_name => '1');
+				$this->set($survey_name_column, $surveyname);
+				$this->set($user_name_column, $user_name);
+				$count = $this->Survey->find('count', array('conditions' => $conditions));
+				if ($count > 0) {
+					if ($this->isJsonOrXmlExt()){
+						$this->set('error', 'user exists.');
+						$this->set('_serialize', array_keys($this->viewVars));
+						return;
+					} else {
+						$this->Session->setFlash(__('user exists.'));
+					}
 				}
 			}
 
@@ -259,7 +265,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array('id <=' => $id);
+					$conditions = array('id <=' => $id, $finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
