@@ -123,6 +123,7 @@ class SurveysController extends AppController {
 			$survey_name_column = 'userid';
 			$surveyname = $this->request->data['Survey'][$survey_name_column];
 			$user_name = $this->request->data['Survey'][$user_name_column];
+			$finished_name = 'q48';
 
 			$this->loadModel("SurveyValidation");
 			$valid_user = $this->SurveyValidation->exists_one($surveyname, $user_name_column, $user_name);
@@ -136,7 +137,7 @@ class SurveysController extends AppController {
 				}
 			}
 
-			$conditions = array($survey_name_column => $surveyname, $user_name_column => $user_name);
+			$conditions = array($survey_name_column => $surveyname, $user_name_column => $user_name, $finished_name => '1' );
 			$this->set($survey_name_column, $surveyname);
 			$this->set($user_name_column, $user_name);
 			$count = $this->Survey->find('count', array('conditions' => $conditions));
@@ -154,7 +155,6 @@ class SurveysController extends AppController {
 			if ($this->Survey->save($this->request->data)) {
 
 				// check if finished
-				$finished_name = 'q48';
 				if (isset($this->request->data['Survey'][$finished_name])) {
 					$finished = $this->request->data['Survey'][$finished_name];
 				}
@@ -216,6 +216,7 @@ class SurveysController extends AppController {
 			$survey_name_column = 'userid';
 			$surveyname = $this->request->data['Survey'][$survey_name_column];
 			$user_name = $this->request->data['Survey'][$user_name_column];
+			$finished_name = 'q48';
 
 			$this->loadModel("SurveyValidation");
 			$valid_user = $this->SurveyValidation->exists_one($surveyname, $user_name_column, $user_name);
@@ -246,7 +247,6 @@ class SurveysController extends AppController {
 			if ($this->Survey->save($this->request->data)) {
 
 				// check if finished
-				$finished_name = 'q48';
 				if (isset($this->request->data['Survey'][$finished_name])) {
 					$finished = $this->request->data['Survey'][$finished_name];
 				}
