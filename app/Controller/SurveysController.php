@@ -127,9 +127,13 @@ class SurveysController extends AppController {
 
 			$this->loadModel("SurveyValidation");
 			$valid_user = $this->SurveyValidation->exists_one($surveyname, $user_name_column, $user_name);
+			//$this->set($sql, $this->SurveyValidation->getDataSource()->getLog(false, false));
+			//$this->set('count', $valid_user);
 			if (!$valid_user) {
 				if ($this->isJsonOrXmlExt()){
 					$this->set('error', 'user is invalid.');
+					$this->set($user_name_column, $user_name);
+					$this->set($survey_name_column, $surveyname);
 					$this->set('_serialize', array_keys($this->viewVars));
 					return;
 				} else {
@@ -167,7 +171,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array('id <=' => $id, $finished_name => '1');
+					$conditions = array($survey_name_column => $surveyname, 'id <=' => $id, $finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
@@ -265,7 +269,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array('id <=' => $id, $finished_name => '1');
+					$conditions = array($survey_name_column => $surveyname, 'id <=' => $id, $finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
