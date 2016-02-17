@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `survey_validations`;
 CREATE TABLE `survey_validations` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `surveyname` varchar(50) NOT NULL,
-  `q_name` varchar(5) NOT NULL,
-  `valid_value` varchar(50) NOT NULL,
+  `cellphone` varchar(20) NOT NULL,
+  `verifycode` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
