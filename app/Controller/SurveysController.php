@@ -122,6 +122,25 @@ class SurveysController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
+	private function find_user_validation($surveyname, $user_name) {
+		// check survey_validation
+		$this->loadModel("SurveyValidation");
+		$valid_user = $this->SurveyValidation->find_one($surveyname, $user_name);
+		debug($valid_user);
+		if ($valid_user) {
+			return $valid_user['SurveyValidation'];	
+		}
+		else {
+			return false;
+		}
+	}
+
+	private function is_user_finished_survey($surveyname, $user_name) {
+	}
+
+	private function is_bingo($surveyname, $user_name) {
+	}
+
 	public function addwithbingo() {
 		if ($this->request->is('post')) {
 
@@ -144,27 +163,31 @@ class SurveysController extends AppController {
 			}
 
 			debug($valid_user['SurveyValidation']);
-			return;
 
+			// check if user has submit data already
 			$conditions = array($this->survey_name_column => $surveyname, 
 				'OR' => array(
-						$this->user_name_column => $valid_user['cellphone'],
-						$this->user_name_column => $valid_user['cellphone'],
-					)
+						array($this->user_name_column => $valid_user['SurveyValidation']['cellphone']),
+						array($this->user_name_column => $valid_user['SurveyValidation']['verifycode']),
+					),
 				$this->finished_name => '1' );
+			debug($conditions);
 			$this->set($this->survey_name_column, $surveyname);
 			$this->set($this->user_name_column, $user_name);
 			$count = $this->Survey->find('count', array('conditions' => $conditions));
+			debug($count);
+
 			if ($count > 0) {
 				if ($this->isJsonOrXmlExt()){
 					$this->set('error', 'user exists.');
 					$this->set('_serialize', array_keys($this->viewVars));
 					return;
 				} else {
-					$this->Session->setFlash(__('user exists.'));
+					return $this->Session->setFlash(__('user exists.'));
 				}
 			}
 
+			// saving data to database
 			$this->Survey->create();
 			if ($this->Survey->save($this->request->data)) {
 
@@ -196,13 +219,13 @@ class SurveysController extends AppController {
 					}
 				}
 
-
 				if ($this->isJsonOrXmlExt()){
 					$this->set('id', $this->Survey->id);
 					$this->set('_serialize', array_keys($this->viewVars));
 					return;
 				} else {
 					$this->Session->setFlash(__('The survey has been saved.'));
+					return;
 					//return $this->redirect(array('action' => 'index'));
 				}
 			} else {
@@ -244,7 +267,10 @@ class SurveysController extends AppController {
 			$old_user_name = $this->Survey->read($this->user_name_column);
 			if ($old_user_name != $surveyname) {
 				$conditions = array($this->survey_name_column => $surveyname,
-					$this->user_name_column => $user_name,
+					'OR' => array(
+							array($this->user_name_column => $valid_user['SurveyValidation']['cellphone']),
+							array($this->user_name_column => $valid_user['SurveyValidation']['verifycode']),
+						),
 					'id <>' => $id,
 					$this->finished_name => '1');
 				$this->set($this->survey_name_column, $surveyname);
