@@ -6,21 +6,19 @@ App::uses('AppModel', 'Model');
  */
 class SurveyValidation extends AppModel {
 
-public function exists_one($surveyname, $q_name, $valid_value) {
-	$options = array('conditions' => 
-		array(
-			'surveyname' => $surveyname,
-			'q_name' => $q_name,
-			'valid_value' => $valid_value,
-		)
-	);
-	$result = $this->find('count', $options);
-	if ($result == 0) {
-		return false;	
+	public function find_one($surveyname, $valid_value) {
+		$options = array('conditions' => 
+			array(
+				'surveyname' => $surveyname,
+				'OR' => array(
+					'cellphone' => $valid_value,
+					'verifycode' => $valid_value,
+					),
+			),
+			'limit' => 1,
+		);
+		$result = $this->find('first', $options);
+		return $result;	
 	}
-	else {
-		return true;
-	}
-}
 
 }

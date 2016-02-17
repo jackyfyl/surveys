@@ -7,6 +7,12 @@ App::uses('AppController', 'Controller');
  * @property PaginatorComponent $Paginator
  */
 class SurveysController extends AppController {
+	
+	// some statics for "withbingo" functions
+	private	$user_name_column = 'q01';
+	private	$survey_name_column = 'userid';
+	private	$finished_name = 'q48';
+
 
 	public $components = array('Paginator', 'RequestHandler', 'Session');
 
@@ -118,22 +124,18 @@ class SurveysController extends AppController {
 
 	public function addwithbingo() {
 		if ($this->request->is('post')) {
-			// check survey_validation
-			$user_name_column = 'q01';
-			$survey_name_column = 'userid';
-			$surveyname = $this->request->data['Survey'][$survey_name_column];
-			$user_name = $this->request->data['Survey'][$user_name_column];
-			$finished_name = 'q48';
 
+			$surveyname = $this->request->data['Survey'][$this->survey_name_column];
+			$user_name = $this->request->data['Survey'][$this->user_name_column];
+
+			// check survey_validation
 			$this->loadModel("SurveyValidation");
-			$valid_user = $this->SurveyValidation->exists_one($surveyname, $user_name_column, $user_name);
-			//$this->set($sql, $this->SurveyValidation->getDataSource()->getLog(false, false));
-			//$this->set('count', $valid_user);
+			$valid_user = $this->SurveyValidation->find_one($surveyname, $user_name);
 			if (!$valid_user) {
 				if ($this->isJsonOrXmlExt()){
 					$this->set('error', 'user is invalid.');
-					$this->set($user_name_column, $user_name);
-					$this->set($survey_name_column, $surveyname);
+					$this->set($this->user_name_column, $user_name);
+					$this->set($this->survey_name_column, $surveyname);
 					$this->set('_serialize', array_keys($this->viewVars));
 					return;
 				} else {
@@ -141,9 +143,17 @@ class SurveysController extends AppController {
 				}
 			}
 
-			$conditions = array($survey_name_column => $surveyname, $user_name_column => $user_name, $finished_name => '1' );
-			$this->set($survey_name_column, $surveyname);
-			$this->set($user_name_column, $user_name);
+			debug($valid_user['SurveyValidation']);
+			return;
+
+			$conditions = array($this->survey_name_column => $surveyname, 
+				'OR' => array(
+						$this->user_name_column => $valid_user['cellphone'],
+						$this->user_name_column => $valid_user['cellphone'],
+					)
+				$this->finished_name => '1' );
+			$this->set($this->survey_name_column, $surveyname);
+			$this->set($this->user_name_column, $user_name);
 			$count = $this->Survey->find('count', array('conditions' => $conditions));
 			if ($count > 0) {
 				if ($this->isJsonOrXmlExt()){
@@ -159,8 +169,8 @@ class SurveysController extends AppController {
 			if ($this->Survey->save($this->request->data)) {
 
 				// check if finished
-				if (isset($this->request->data['Survey'][$finished_name])) {
-					$finished = $this->request->data['Survey'][$finished_name];
+				if (isset($this->request->data['Survey'][$this->finished_name])) {
+					$finished = $this->request->data['Survey'][$this->finished_name];
 				}
 				else
 				{
@@ -171,7 +181,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array($survey_name_column => $surveyname, 'id <=' => $id, $finished_name => '1');
+					$conditions = array($this->survey_name_column => $surveyname, 'id <=' => $id, $this->finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
@@ -216,14 +226,11 @@ class SurveysController extends AppController {
 		$this->request->data[$this->modelClass]['id'] = $id;
 		if ($this->request->is(array('post', 'put'))) {
 			// check survey_validation
-			$user_name_column = 'q01';
-			$survey_name_column = 'userid';
-			$surveyname = $this->request->data['Survey'][$survey_name_column];
-			$user_name = $this->request->data['Survey'][$user_name_column];
-			$finished_name = 'q48';
+			$surveyname = $this->request->data['Survey'][$this->survey_name_column];
+			$user_name = $this->request->data['Survey'][$this->user_name_column];
 
 			$this->loadModel("SurveyValidation");
-			$valid_user = $this->SurveyValidation->exists_one($surveyname, $user_name_column, $user_name);
+			$valid_user = $this->SurveyValidation->find_one($surveyname, $user_name);
 			if (!$valid_user) {
 				if ($this->isJsonOrXmlExt()){
 					$this->set('error', 'user is invalid.');
@@ -234,14 +241,14 @@ class SurveysController extends AppController {
 				}
 			}
 
-			$old_user_name = $this->Survey->read($user_name_column);
+			$old_user_name = $this->Survey->read($this->user_name_column);
 			if ($old_user_name != $surveyname) {
-				$conditions = array($survey_name_column => $surveyname,
-					$user_name_column => $user_name,
+				$conditions = array($this->survey_name_column => $surveyname,
+					$this->user_name_column => $user_name,
 					'id <>' => $id,
-					$finished_name => '1');
-				$this->set($survey_name_column, $surveyname);
-				$this->set($user_name_column, $user_name);
+					$this->finished_name => '1');
+				$this->set($this->survey_name_column, $surveyname);
+				$this->set($this->user_name_column, $user_name);
 				$count = $this->Survey->find('count', array('conditions' => $conditions));
 				if ($count > 0) {
 					if ($this->isJsonOrXmlExt()){
@@ -257,8 +264,8 @@ class SurveysController extends AppController {
 			if ($this->Survey->save($this->request->data)) {
 
 				// check if finished
-				if (isset($this->request->data['Survey'][$finished_name])) {
-					$finished = $this->request->data['Survey'][$finished_name];
+				if (isset($this->request->data['Survey'][$this->finished_name])) {
+					$finished = $this->request->data['Survey'][$this->finished_name];
 				}
 				else
 				{
@@ -269,7 +276,7 @@ class SurveysController extends AppController {
 				//
 				if ($finished == 1) {
 					$id = $this->Survey->id;
-					$conditions = array($survey_name_column => $surveyname, 'id <=' => $id, $finished_name => '1');
+					$conditions = array($this->survey_name_column => $surveyname, 'id <=' => $id, $this->finished_name => '1');
 					$order = $this->Survey->find('count', array('conditions' => $conditions));
 					$this->set('order', $order);
 
