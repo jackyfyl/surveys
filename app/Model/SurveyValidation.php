@@ -7,7 +7,7 @@ App::uses('AppModel', 'Model');
 class SurveyValidation extends AppModel {
 
 	public function find_one($surveyname, $valid_value) {
-		$options = array('conditions' => 
+		$options = array('conditions' =>
 			array(
 				'surveyname' => $surveyname,
 				'OR' => array(
@@ -18,7 +18,7 @@ class SurveyValidation extends AppModel {
 			'limit' => 1,
 		);
 		$result = $this->find('first', $options);
-		return $result;	
+		return $result;
 	}
 
 }

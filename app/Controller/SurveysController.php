@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  * @property PaginatorComponent $Paginator
  */
 class SurveysController extends AppController {
-	
+
 	// some statics for "withbingo" functions
 	private	$user_name_column = 'q01';
 	private	$survey_name_column = 'userid';
@@ -40,7 +40,6 @@ class SurveysController extends AppController {
 	}
 
 	public function add() {
-		debug($this->request->data);
 		if ($this->request->is('post')) {
 			$this->Survey->create();
 			if ($this->Survey->save($this->request->data)) {
@@ -123,16 +122,6 @@ class SurveysController extends AppController {
 	}
 
 	private function find_user_validation($surveyname, $user_name) {
-		// check survey_validation
-		$this->loadModel("SurveyValidation");
-		$valid_user = $this->SurveyValidation->find_one($surveyname, $user_name);
-		debug($valid_user);
-		if ($valid_user) {
-			return $valid_user['SurveyValidation'];	
-		}
-		else {
-			return false;
-		}
 	}
 
 	private function is_user_finished_survey($surveyname, $user_name) {
@@ -162,20 +151,16 @@ class SurveysController extends AppController {
 				}
 			}
 
-			debug($valid_user['SurveyValidation']);
-
 			// check if user has submit data already
-			$conditions = array($this->survey_name_column => $surveyname, 
+			$conditions = array($this->survey_name_column => $surveyname,
 				'OR' => array(
 						array($this->user_name_column => $valid_user['SurveyValidation']['cellphone']),
 						array($this->user_name_column => $valid_user['SurveyValidation']['verifycode']),
 					),
 				$this->finished_name => '1' );
-			debug($conditions);
 			$this->set($this->survey_name_column, $surveyname);
 			$this->set($this->user_name_column, $user_name);
 			$count = $this->Survey->find('count', array('conditions' => $conditions));
-			debug($count);
 
 			if ($count > 0) {
 				if ($this->isJsonOrXmlExt()){
@@ -247,7 +232,12 @@ class SurveysController extends AppController {
 		}
 
 		$this->request->data[$this->modelClass]['id'] = $id;
-		if ($this->request->is(array('post', 'put'))) {
+		if (!$this->request->is(array('post', 'put'))) {
+			$options = array('conditions' => array('Survey.' . $this->Survey->primaryKey => $id));
+			$this->request->data = $this->Survey->find('first', $options);
+			return;
+		}
+
 			// check survey_validation
 			$surveyname = $this->request->data['Survey'][$this->survey_name_column];
 			$user_name = $this->request->data['Survey'][$this->user_name_column];
@@ -283,6 +273,7 @@ class SurveysController extends AppController {
 						return;
 					} else {
 						$this->Session->setFlash(__('user exists.'));
+						return;
 					}
 				}
 			}
@@ -324,6 +315,7 @@ class SurveysController extends AppController {
 					return;
 				} else {
 					$this->Session->setFlash(__('The survey has been saved.'));
+					return;
 					//return $this->redirect(array('action' => 'index'));
 				}
 			} else {
@@ -334,11 +326,9 @@ class SurveysController extends AppController {
 				}
 				else {
 					$this->Session->setFlash(__('The survey could not be saved. Please, try again.'));
+					return;
 				}
 			}
-		}
 	}
-
-
 
 }
