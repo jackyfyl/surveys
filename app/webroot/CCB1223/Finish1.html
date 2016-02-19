@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="jquery-1.11.3.min.js"></script>
+<style type="text/css">
+	
+body {
+	background:#e6e6e6;
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	var total_width = $(document).width();
+	
+	$("#Pic").css("height", total_width * 0.2);
+
+	
+	$(document).ready(function() {
+		$("#handpic").load(function(){
+			$("#main").animate({ top: 1.5 * total_width }, "slow");
+			$("#hand").animate({ top: 1.5 * total_width }, "slow", function()
+			{
+				$("#hand").animate({ top:  total_width }, "slow");
+			});
+		});
+
+		if($('#handpic').complete) {
+			$('#handpic').load();
+		}
+	})
+});	
+ 
+
+
+</script>
+<body >
+<div id = "hand" align="center" style=" width: 50%; position:absolute; z-index: 1; margin-left:28%; margin-top:-150%;" >
+	<img id = "handpic" style=" width: 50%" src="hand1.png" alt="Hand pushing title into place" style="">
+</div>
+<div id="main" style="position:absolute; width: 80% ; height: 50%; margin-left:10%; margin-top: -130%">
+	<div id ="card">
+		<section style=" border: 3px solid rgb(200, 200, 200); background-color: rgb(250,200,200); text-align: center; border-radius: 8px; font-size: 1.2em; font-family: inherit; text-decoration: inherit; box-sizing: border-box; padding: 0px;" >
+			<br>
+			<section id ="text1" style="line-height: 1.4; font-family: inherit; font-weight: bold; box-sizing: border-box;" >
+				<img src="Logo.png" width="50%" ></img>
+			</section>
+			<br>
+			<section id ="text1" style="line-height: 1.4; font-family: inherit; font-weight: bold; box-sizing: border-box;" >
+				<section  style="box-sizing: border-box;"><font color="red">
+					恭喜您获得10元手机话费
+				</section>
+			</section>
+			<br>
+			<section id ="text2" style="line-height: 1.4; font-size: 0.8em; font-family: inherit; text-align: inherit; text-decoration: inherit; color: rgb(52, 54, 60); box-sizing: border-box;" >
+				<section  style="box-sizing: border-box;"><font color="red">
+					预计将在1周后直接充值到您的手机中
+					<br  style="box-sizing: border-box;"/>
+				</section>
+			</section>
+			<br>
+			<section id ="text2" style="line-height: 1.4; font-size: 1em; font-family: inherit; text-align: inherit; text-decoration: inherit; color: rgb(52, 54, 60); box-sizing: border-box;" >
+				<section  style="box-sizing: border-box;"><font color="red">
+					再次感谢您的参与！
+					<br  style="box-sizing: border-box;"/>
+				</section>
+			</section>
+			<br>			
+			<section id ="text1" style="line-height: 1.4; font-family: inherit; font-weight: bold; box-sizing: border-box;" >
+				<img src="xiaolong.png" ></img>
+			</section>			
+			<br>			
+		</section>
+	</div>	
+</div>
+</body>
+</html>

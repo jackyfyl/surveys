@@ -148,6 +148,8 @@ var rand = 0;
 
 var answerData = {};
 
+var bInvalid = 1;
+
 function scrollwindow(index) 
 {
 	document.documentElement.scrollTop = index;
@@ -180,13 +182,11 @@ function DisplayTopicWithoutScrol(strMsg)
 	$(strMsg).fadeIn(200);	
 }
 
-var bInvalid = 0; 
-
 function CreateRecord(answerData)
 {
-	answerData['Survey']['userid']='400客服热线满意度问卷_1'; 
+	answerData['Survey']['userid']='400客服热线满意度问卷_2'; 
 	var time1 = new Date();
-	answerData['Survey']['q46'] = time1.getTime();	
+	answerData['Survey']['q46'] = time1.getTime();		
 	$.ajax({
 		type: "post",
 		url: "http://121.40.137.214/surveys/addwithbingo.json",
@@ -197,7 +197,11 @@ function CreateRecord(answerData)
 			if ( json["error"] == "user is invalid.")
 			{
 				bInvalid = 1; 
-				alert("验证码无效！");
+				if($(".S3_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S3_q')", 1000 );
+					setTimeout("DisplayTopic('.S3_a')", 1000 );			
+				}					
 			}
 			else if (json["error"] == "user exists." )
 			{
@@ -206,6 +210,7 @@ function CreateRecord(answerData)
 			}
 			else
 			{
+				bInvalid = 0;
 				RecordID = json["id"];
 				if($(".S3_q").is(":hidden"))
 				{
@@ -216,6 +221,7 @@ function CreateRecord(answerData)
 			}
 		},
 		error: function (err) {
+			bInvalid = 1;
 			console.error(err);
 		}
 
@@ -257,13 +263,16 @@ function onUserSelect(question, answer) {
 		x = "q";
 		
 	answerData['Survey'][x+ question.toString()] = result; 	
-
+	
 	console.log(answerData);
 
 	if ( RecordID == 0 )
 		CreateRecord(answerData);
 	else
-		EditRecord(answerData);
+	{
+		if (bInvalid == 0 )
+			EditRecord(answerData);
+	}
 }
 
 function browserRedirect() {
@@ -339,35 +348,43 @@ function Final_submit()
 //	onUserSelect(question, answer)
 //	window.location.href='Finish.html';
 
-	var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
-	var time = new Date();
-	answerData['Survey']['q47'] = time.getTime();	
-	answerData['Survey']['q48'] = 1; 	
-	$.ajax({
-		type: "post",
-		url: temp,
-		data: answerData,
-		dataType: "json",
-		success: function (json) {
-			// send data success
-			console.log(json);
-			bingo = json["bingo"];
-			
-			if (bingo == 1)
-			{
-				window.location.href='Finish1.html';
-			}
-			else
-			{
-				window.location.href='Finish2.html';			
-			}
-		},
-		error: function (err) {
-			console.error(err);
-			alert("请检查您的网络设置");
-		}
+	if (bInvalid == 0)
+	{
 
-	});	
+		var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
+		var time = new Date();
+		answerData['Survey']['q47'] = time.getTime();
+		answerData['Survey']['q48'] = 1; 	
+		$.ajax({
+			type: "post",
+			url: temp,
+			data: answerData,
+			dataType: "json",
+			success: function (json) {
+				// send data success
+				console.log(json);
+				bingo = json["bingo"];
+				
+				if (bingo == 1)
+				{
+					window.location.href='Finish1.html';
+				}
+				else
+				{
+					window.location.href='Finish2.html';			
+				}
+			},
+			error: function (err) {
+				console.error(err);
+				alert("请检查您的网络设置");
+			}
+
+		});	
+	}
+	else
+	{
+		window.location.href='Finish2.html';
+	}
 }
 
 function OKforS1a()
@@ -408,17 +425,7 @@ function OKforA2a()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-		
-		if (Answer.length <= 50)
-			onUserSelect(12, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(12, str1 );
-			onUserSelect(40, str2 );			
-		}
+		onUserSelect(12, Answer );		
 	}
 }
 
@@ -444,17 +451,7 @@ function keypressA2a(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2a_Answer").value;
-//		onUserSelect(12, Answer );
-		if (Answer.length <= 50)
-			onUserSelect(12, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(12, str1 );
-			onUserSelect(40, str2 );			
-		}
+		onUserSelect(12, Answer );
 	}
 }
 
@@ -468,17 +465,7 @@ function OKforA2b()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-//		onUserSelect(13, Answer );		
-		if (Answer.length <= 50)
-			onUserSelect(13, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(13, str1 );
-			onUserSelect(41, str2 );			
-		}
+		onUserSelect(13, Answer );		
 	}
 }
 
@@ -504,17 +491,7 @@ function keypressA2b(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2a_Answer").value;
-//		onUserSelect(13, Answer );
-		if (Answer.length <= 50)
-			onUserSelect(13, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(13, str1 );
-			onUserSelect(41, str2 );			
-		}
+		onUserSelect(13, Answer );
 	}
 }
 
@@ -529,17 +506,7 @@ function OKforA2c()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-//		onUserSelect(14, Answer );		
-		if (Answer.length <= 50)
-			onUserSelect(14, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(14, str1 );
-			onUserSelect(42, str2 );			
-		}
+		onUserSelect(14, Answer );		
 	}
 }
 
@@ -565,17 +532,7 @@ function keypressA2c(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2c_Answer").value;
-//		onUserSelect(14, Answer );
-		if (Answer.length <= 50)
-			onUserSelect(14, Answer );	
-		else
-		{
-			var str1 = Answer.substr(0, 50);
-			var str2 = Answer.substr(50);
-			
-			onUserSelect(14, str1 );
-			onUserSelect(42, str2 );			
-		}
+		onUserSelect(14, Answer );
 	}
 }
 
@@ -1182,7 +1139,7 @@ $(function(){
                     嗨 ! 主人前两天给小龙打过电话了吧，小龙好希望知道主人的想法，这会让小龙下次做得更好哦! 
 					<br>
 					<br>
-				    首先嘛，主人得填一下短信里的中文验证码 ，这样小龙才能认出主人哦
+				    首先嘛，主人得填一下手机号，这样小龙才能认出主人哦
 				</section>
 			</section>
 		</section>
@@ -1197,7 +1154,7 @@ $(function(){
 					<div class="S1a_a_controls">
 						<div class="bg">
 							<p class="choice" style="padding: 0;">	
-								<textarea class = "S1a" id="S1a_Answer" name="QuestionS1a" style="width:100%;height:80px; font-size: 0.9em" placeholder="请填写中文验证码" ></textarea>																						
+								<input class = "S1a" id="S1a_Answer" name="QuestionS1a" type="tel" style="width:100%;font-size: 0.9em" placeholder="请填写手机号码"><label for="0_1"></input>
 							</p>	
 								<div style="text-align: center;">
 									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a()">确 认</a>	
@@ -1692,7 +1649,7 @@ $(function(){
                             </p>
                             <p class="choice">
                                 <input class="S4f" name="QuestionS4f" type="checkbox" value="86" id="7_6"><label for="7_6">商场POS分期（银行合作商户现场直接刷卡分期）</label></input>
-                            </p>	
+                            </p>
 						</div>			
 					</div>					
 				</section>					
@@ -1785,7 +1742,7 @@ $(function(){
 		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
 			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
 				<section  style="box-sizing: border-box;">
-                    在过去一周内是否接受过龙卡信用卡中心的电话人工坐席服务？【单选】
+                    当时有没有转接到人工服务呢？【单选】
 				</section>
 			</section>
 		</section>

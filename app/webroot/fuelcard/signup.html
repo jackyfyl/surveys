@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>报名申领</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            text-align: center;
+            color: white;
+            background-color: rgb(1,80,243);
+            padding: 10px;
+            font-size: 30px;
+            line-height: 1;
+            z-index: 10;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            height: 30px;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 50px 20px;
+            color: white;
+            background-color: rgb(33,37,74);
+        }
+
+        .styled-input {
+            padding: 1.5em 1em;
+            /*color: white;
+            background-color: rgba(70, 79, 96, 0.95);*/
+        }
+
+        .styled-input::-webkit-input-placeholder {
+            /*color: #c9c9c9;*/
+        }
+
+        .styled-span {
+            /*color: white;
+            background-color: rgba(70, 79, 96, 0.95);*/
+        }
+
+        .page select {
+            height: 3em;
+            /*color: white;
+            background-color: rgba(70, 79, 96, 0.95);*/
+        }
+
+        .page select option {
+            padding: 0.5em;
+        }
+
+        .btn-green {
+            position: absolute;
+            bottom: 50px;
+            left: 20px;
+            right: 20px;
+            padding: 0.8em;
+            font-weight: bolder;
+            color: #fff;
+            background-color: rgb(1,80,243);
+            border-color: rgb(1,50,203);
+        }
+        .btn-green:focus,
+        .btn-green:active{
+            color: #fff;
+            background-color: rgb(1,60,223);
+            border-color: rgb(1,50,203);
+        }
+
+        #page2 {
+            transform: translate3d(100%,0,0);
+            display: none;
+            transition: all 0.5s ease-in-out;
+            -webkit-transition: all 0.5s ease-in-out;
+        }
+
+        #page2 .btn-decrease, #page2 .btn-increase {
+            color: gray;
+            background-color: white;
+            font-size: 2em;
+            line-height: 1;
+            padding: 0;
+            width: 1em;
+        }
+
+        .credit-card-points {
+            width: 70px;
+            text-align: center;
+            color: black;
+            background-color: white;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+
+        .right-hint {
+            display: inline-block;
+            width: 80px;
+            margin-top: -12px;
+            padding: 6px;
+            font-size: 0.9em;
+            text-align: center;
+            color: lightgrey;
+            border: 1px solid lightgrey;
+            vertical-align: middle;
+            float: right;
+        }
+
+        .money {
+            color: lightgrey;
+        }
+
+        .result-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            display: none;
+        }
+
+        .result-dialog {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 80%;
+            padding: 50px 10px;
+            background-color: white;
+            color: black;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: bolder;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <span class="title">报名申领</span>
+    <img class="back-btn" src="image/left_arrow.png" style="display: none;" />
+</div>
+
+<div class="page" id="page1">
+    <div style="margin-top: 40px; padding-left: 13px; font-weight: bolder;">请填写拟参加活动的建行龙卡信息</div>
+    <input style="margin-top: 20px;" type="text" class="form-control styled-input" placeholder="请填写您的建行汽车卡卡号">
+    <input style="margin-top: 20px;" type="text" class="form-control styled-input" placeholder="请填写您的系统预留手机号码">
+    <select class="form-control" style="margin-top: 20px;">
+        <option>上海分行</option>
+        <option>江苏分行</option>
+        <option>浙江分行</option>
+        <option>山东分行</option>
+        <option>山西分行</option>
+        <option>广东分行</option>
+    </select>
+    <div style="margin-top: 20px; font-size: 0.9em; color: #c9c9c9;">
+        温馨提示：关注“中国建设银行”微信银行，轻松查询您的汽车卡积分。
+    </div>
+
+    <a class="btn btn-green btn-next" role="button">
+        下一步
+    </a>
+</div>
+
+<div class="page" id="page2">
+    <div style="margin-top: 40px; font-weight: bolder;">请设置拟兑换的龙卡信用卡积分</div>
+    <div style="margin-top: 20px;">
+        <span>兑换龙卡积分：</span>
+        <a class="btn btn-decrease" role="button">-</a>
+        <input type="text" class="credit-card-points" value="5" disabled="disabled">
+        <span style="display: inline-block; width: 24px; margin-left: -30px; color: gray; font-size: 12px;">万分</span>
+        <a class="btn btn-increase" role="button">+</a>
+        <span class="right-hint">5万<br>积分起兑</span>
+    </div>
+    <div style="margin-top: 40px;">
+        <span>兑换油卡金额：</span>
+        <span class="money">200元</span>
+        <span class="right-hint">兑换比<br>例为4‰</span>
+    </div>
+    <div style="margin-top: 40px; font-weight: bolder;">请填写本人名下的加油卡信息</div>
+    <div class="input-group" style="margin-top: 20px;">
+        <span class="input-group-addon styled-span" id="fuel-card-type">加油卡类型</span>
+        <select class="form-control" aria-describedby="fuel-card-type">
+            <option>中石油</option>
+            <option>中石化</option>
+        </select>
+    </div>
+    <div class="input-group" style="margin-top: 20px;">
+        <span class="input-group-addon styled-span" id="fuel-card-id">加油卡卡号</span>
+        <input type="text" class="form-control styled-input" placeholder="请填写加油卡卡号" aria-describedby="fuel-card-id">
+    </div>
+
+    <a class="btn btn-green btn-submit" role="button">
+        提交
+    </a>
+</div>
+
+<div class="result-page">
+    <div class="result-dialog">
+        <div style="font-size: 2em; margin-bottom: 0.4em;">报名完成</div>
+        <div style="font-size: 1.3em;">您的申请已提交成功</div>
+        <div>5个工作日内，会有短信通知您申请情况</div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    'use strict';
+
+    (function ($) {
+
+        $(document).ready(function () {
+            var transitionDuration = 500;
+            var isTransiting = false;
+            var cardPoints = 5;
+            var minCardPoints = 5;
+            var maxCardPoints = 10;
+            var money = 200;
+
+            $('.btn-next').on('click', function() {
+                if(isTransiting) {
+                    return;
+                }
+                isTransiting = true;
+                var page2 = $('#page2');
+                page2.show();
+                setTimeout(function() {
+                    page2.css({ 'transform': 'translate3d(0,0,0)', '-webkit-transform': 'translate3d(0,0,0)' });
+                }, 100);
+                setTimeout(function() {
+                    $('#page1').hide();
+                    $('.back-btn').show();
+                    isTransiting = false;
+                }, transitionDuration + 100);
+            });
+            $('.back-btn').on('click', function() {
+                if(isTransiting) {
+                    return;
+                }
+                isTransiting = true;
+                $('#page1').show();
+                var page2 = $('#page2');
+                page2.css({ 'transform': 'translate3d(100%,0,0)', '-webkit-transform': 'translate3d(100%,0,0)' });
+                setTimeout(function() {
+                    page2.hide();
+                    $('.back-btn').hide();
+                    isTransiting = false;
+                }, transitionDuration);
+            });
+            $('.btn-submit').on('click', function() {
+                $('.result-page').show();
+            });
+            $('.result-page').on('click', function() {
+                $('.result-page').hide();
+            });
+            $('.btn-decrease').on('click', function() {
+                if(cardPoints > minCardPoints) {
+                    $('.credit-card-points').val(--cardPoints);
+                    $('.money').html(cardPoints * 40 + '元');
+                }
+            });
+            $('.btn-increase').on('click', function() {
+                if(cardPoints < maxCardPoints) {
+                    $('.credit-card-points').val(++cardPoints);
+                    $('.money').html(cardPoints * 40 + '元');
+                }
+            });
+        });
+
+    })(jQuery);
+
+</script>
+</body>
+</html>

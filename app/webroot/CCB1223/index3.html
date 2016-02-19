@@ -143,6 +143,7 @@ span{
 
 var currentpos,timer; 
 
+var bPhone = 1; 
 var RecordID = 0;
 var rand = 0;
 
@@ -182,9 +183,56 @@ function DisplayTopicWithoutScrol(strMsg)
 
 var bInvalid = 0; 
 
-function CreateRecord(answerData)
+function CreateRecord_Phone(answerData)
 {
-	answerData['Survey']['userid']='400客服热线满意度问卷_1'; 
+	answerData['Survey']['userid']='400客服热线满意度问卷_Feb'; 
+	var time1 = new Date();
+	answerData['Survey']['q46'] = time1.getTime();		
+	$.ajax({
+		type: "post",
+		url: "http://121.40.137.214/surveys/addwithbingo.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			if ( json["error"] == "user is invalid.")
+			{
+				bInvalid = 1; 
+				if($(".S3_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S3_q')", 1000 );
+					setTimeout("DisplayTopic('.S3_a')", 1000 );			
+				}					
+			}
+			else if (json["error"] == "user exists." )
+			{
+				bInvalid = 1; 
+				alert("抱歉！您已经完成过问卷");			
+			}
+			else
+			{
+				bInvalid = 0;
+				RecordID = json["id"];
+				if($(".S3_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S3_q')", 1000 );
+					setTimeout("DisplayTopic('.S3_a')", 1000 );			
+				}				
+				console.log(json);
+			}
+		},
+		error: function (err) {
+			bInvalid = 1;
+			console.error(err);
+		}
+
+	});	
+}
+
+
+function CreateRecord_Code(answerData)
+{
+	answerData['Survey']['userid']='400客服热线满意度问卷_Feb'; 
 	var time1 = new Date();
 	answerData['Survey']['q46'] = time1.getTime();	
 	$.ajax({
@@ -261,7 +309,12 @@ function onUserSelect(question, answer) {
 	console.log(answerData);
 
 	if ( RecordID == 0 )
-		CreateRecord(answerData);
+	{
+		if ( bPhone == 1)
+			CreateRecord_Phone(answerData);
+		else
+			CreateRecord_Code(answerData);
+	}
 	else
 		EditRecord(answerData);
 }
@@ -370,9 +423,10 @@ function Final_submit()
 	});	
 }
 
-function OKforS1a()
+function OKforS1a_1()
 {
-	Answer = document.getElementById("S1a_Answer").value;
+	bPhone = 1;
+	Answer = document.getElementById("S1a_Answer1").value;
 	if (Answer !="")
 	{
 		onUserSelect(1, Answer );		
@@ -380,8 +434,9 @@ function OKforS1a()
 }
 
 
-function keypressS1a(e)
+function keypressS1a_1(e)
 {
+	bPhone = 1; 
 	var e = e || window.event; 
 	var k = e.keyCode;
 	if (k == 13)
@@ -393,7 +448,37 @@ function keypressS1a(e)
 		}	
 		
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
-		Answer = document.getElementById("S1a_Answer").value;
+		Answer = document.getElementById("S1a_Answer1").value;
+		onUserSelect(1, Answer );
+	}
+}
+
+function OKforS1a_2()
+{
+	bPhone = 0;
+	Answer = document.getElementById("S1a_Answer2").value;
+	if (Answer !="")
+	{
+		onUserSelect(1, Answer );		
+	}
+}
+
+
+function keypressS1a_2(e)
+{
+	bPhone = 0; 
+	var e = e || window.event; 
+	var k = e.keyCode;
+	if (k == 13)
+	{
+		if($(".S3_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S3_q')", 1000 );
+			setTimeout("DisplayTopic('.S3_a')", 1000 );	
+		}	
+		
+//		onUserSelect(7, $('input[name="Question7"]:checked').val() );
+		Answer = document.getElementById("S1a_Answer2").value;
 		onUserSelect(1, Answer );
 	}
 }
@@ -616,8 +701,27 @@ $(function(){
     $(".Time").text(now);
 	$(".Time").fadeIn(200);
 	setTimeout("DisplayTopic('.S1a_q')", 0 );
-	setTimeout("DisplayTopic('.S1a_a')", 1000 );
+	setTimeout("DisplayTopic('.Pre_a')", 1000 );
 	
+	
+	$(".Prea").click(function(){
+	
+		var answer = $('input[name="PreQuestion_1"]:checked').val();
+		
+		if (answer == 1)
+		{
+			$(".S1a_a2").hide();
+			$(".S1a_a1").show();
+			RecordID = 0;
+		}
+		else if (answer == 2)
+		{
+			$(".S1a_a1").hide();
+			$(".S1a_a2").show();		
+			RecordID = 0;
+		}
+		
+	});
 	
 	$(".S3").click(function(){
 		
@@ -1165,6 +1269,7 @@ $(function(){
 <div style="text-align: center">
 <div class="Time" style="text-align: center; margin-left:auto; margin-right:auto; Display: none"></div>
 </div>
+
 <div class="S1a_q" style="Display: none">
 	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
 		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
@@ -1182,14 +1287,43 @@ $(function(){
                     嗨 ! 主人前两天给小龙打过电话了吧，小龙好希望知道主人的想法，这会让小龙下次做得更好哦! 
 					<br>
 					<br>
-				    首先嘛，主人得填一下短信里的中文验证码 ，这样小龙才能认出主人哦
+				    首先先让小龙认识下主人哦
 				</section>
 			</section>
 		</section>
 	</section>
 </div>
 
-<div class="S1a_a" style="Display: none">
+<div class="Pre_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+                        <p class="choice">
+                            <input class="Prea" name="PreQuestion_1" type="radio" value="1" id="pre_1"><label for="pre_1">手机号验证</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="Prea" name="PreQuestion_1" type="radio" value="2" id="pre_2"><label for="pre_2">验证码验证</label></input>
+                        </p>
+					</div>				
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+
+<div class="S1a_a1" style="Display: none">
 	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
 		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
 			<section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);" >
@@ -1197,10 +1331,42 @@ $(function(){
 					<div class="S1a_a_controls">
 						<div class="bg">
 							<p class="choice" style="padding: 0;">	
-								<textarea class = "S1a" id="S1a_Answer" name="QuestionS1a" style="width:100%;height:80px; font-size: 0.9em" placeholder="请填写中文验证码" ></textarea>																						
+								<input class = "S1a" id="S1a_Answer1" name="QuestionS1a" type="tel" style="width:100%;font-size: 0.9em" placeholder="请填写手机号码"><label for="0_1"></input>
 							</p>	
 								<div style="text-align: center;">
-									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a()">确 认</a>	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a_1()">确 认</a>	
+								</div>							
+						</div>
+					</div>					
+				</section>
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png"/>
+		</section>
+		
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					&nbsp;&nbsp;我
+				</section>
+			</section>
+		</section>
+		
+	</section>
+</div>	
+
+
+<div class="S1a_a2" style="Display: none">
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);" >
+				<section  style="box-sizing: border-box;">
+					<div class="S1a_a_controls">
+						<div class="bg">
+							<p class="choice" style="padding: 0;">	
+								<textarea class = "S1a" id="S1a_Answer2" name="QuestionS1a" style="width:100%;height:80px; font-size: 0.9em" placeholder="请填写中文验证码" ></textarea>																						
+							</p>	
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a_2()">确 认</a>	
 								</div>							
 						</div>
 					</div>					
@@ -1270,7 +1436,7 @@ $(function(){
 
         </section>
     </div>	
-
+	
 <div class="S3_q" style="Display: none">	
 	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
 		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
