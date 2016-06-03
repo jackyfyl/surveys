@@ -1,0 +1,3417 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="jquery-1.11.3.min.js"></script>
+<style type="text/css">
+body {
+	background:#104787;
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+
+input, button { border:0; line-height:18px; font-size:18px }
+.btns { 
+width:243px; 
+height:40px; 
+color:#000000;
+background: rgb(188, 227, 249);
+padding: 0.5em 1em;
+border-radius: 12px;
+-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+-o-border-radius: 12px;
+
+}
+
+@-webkit-keyframes breathe {
+    0% { opacity: 1; box-shadow:0 1px 2px rgba(255,255,255,0.1);}
+    100% { opacity: 1; border:1px solid rgba(59,235,235,1); box-shadow:0 1px 30px rgba(59,255,255,1);}
+}
+
+.Time { 
+width:100px; 
+height:15px; 
+color:#FFFFFF;
+background: #B0B0B0;
+padding: 0.5em 1em;
+border-radius: 5px;
+font-size: 13px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-o-border-radius: 5px;
+}
+
+.choice{
+	border-bottom: 1px ;
+	padding-left: 0.5em;
+}
+.textwhite{
+	width: 80%;
+}
+#sub {width: 100%;
+	height: 2.5em;
+	line-height: 2.5em;
+	border-radius: 0.2em;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #2dbe60;
+	border: none;
+	margin: 1em 0;}
+span{
+	margin-left: 0.5em;
+	font-size: 12px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-top: 2px;
+	color:#FFFFFF;
+}
+.content{ padding: 0.8em;}
+.bg{
+	border: 1px;
+	border-bottom: none;
+}
+
+</style>
+	<style>
+
+	#dark{
+		background-color:#333;
+		border:1px solid #000;
+		padding:10px;
+		margin-top:20px;}
+		
+	#light{
+		background-color:#FFF;
+		border:1px solid #dedede;
+		padding:10px;
+		margin-top:20px;}	
+		
+	li{ 
+	list-style:none;
+		padding-top:10px;
+		padding-bottom:10px;}	
+
+	.button, .button:visited {
+		background: #222 repeat-x; 
+		display: inline-block; 
+		padding: 5px 10px 6px; 
+		color: #fff; 
+		text-decoration: none;
+		-moz-border-radius: 6px; 
+		-webkit-border-radius: 6px;
+		-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+		border-bottom: 1px solid rgba(0,0,0,0.25);
+		position: relative;
+		cursor: pointer
+	}
+	 
+		.button:hover							{ background-color: #111; color: #fff; }
+		.button:active							{ top: 1px; }
+		.small.button, .small.button:visited 			{ font-size: 11px}
+		.button, .button:visited,
+		.medium.button, .medium.button:visited 		{ font-size: 13px; 
+													  font-weight: bold; 
+													  line-height: 1; 
+													  text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
+													  }
+													  
+		.large.button, .large.button:visited 			{ font-size: 14px; 
+														  padding: 8px 14px 9px; }
+														  
+		.super.button, .super.button:visited 			{ font-size: 34px; 
+														  padding: 8px 14px 9px; }
+		
+		.blue.button, .blue.button:visited		    { background-color: #2981e4; }
+		.blue.button:hover							{ background-color: #2575cf; }
+		.yellow.button, .yellow.button:visited		{ background-color: #eeb515; }
+		.yellow.button:hover						{ background-color: #eeb515; }
+	</style> 
+<script type="text/javascript">
+var currentpos,timer; 
+var bPhone = 1; 
+var RecordID = 0;
+var rand = 0;
+var answerData = {};
+var Value_S1 = 0; 
+var Value_S1e = 0; 
+
+function scrollwindow(index) 
+{
+	document.documentElement.scrollTop = index;
+    window.pageYOffset = index;	
+}
+
+function ScrollTo()
+{
+	var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+	var index = $(document).height()-$(window).height();
+	if (index != 0)
+	{
+		$("html, body").animate({ scrollTop: index });
+//		$("html, body").animate(scrollwindow(index));
+	}
+}
+
+function DisplayTopic(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+	ScrollTo();
+}
+
+function DisplayTopicWithoutScrol(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+}
+
+var bInvalid = 0; 
+
+function CreateRecord_Phone(answerData)
+{
+	answerData['Survey']['userid']='400客服热线满意度问卷_Jun'; 
+	var time1 = new Date();
+	answerData['Survey']['q46'] = time1.getTime();		
+	$.ajax({
+		type: "post",
+		url: "http://121.40.137.214/surveys/addwithbingo.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			if ( json["error"] == "user is invalid.")
+			{
+				bInvalid = 1; 
+				if($(".S1_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S1_1_q')", 1000 );
+					setTimeout("DisplayTopic('.S1_1_a')", 1000 );			
+				}					
+			}
+			else if (json["error"] == "user exists." )
+			{
+				bInvalid = 1; 
+				alert("抱歉！您已经完成过问卷");			
+			}
+			else
+			{
+				bInvalid = 0;
+				RecordID = json["id"];
+				if($(".S1_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S1_1_q')", 1000 );
+					setTimeout("DisplayTopic('.S1_1_a')", 1000 );			
+				}				
+				console.log(json);
+			}
+		},
+		error: function (err) {
+			bInvalid = 1;
+			console.error(err);
+		}
+
+	});	
+}
+
+function CreateRecord_Code(answerData)
+{
+	answerData['Survey']['userid']='400客服热线满意度问卷_Jun'; 
+	var time1 = new Date();
+	answerData['Survey']['q46'] = time1.getTime();	
+	$.ajax({
+		type: "post",
+		url: "http://121.40.137.214/surveys/addwithbingo.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			if ( json["error"] == "user is invalid.")
+			{
+				bInvalid = 1; 
+//				alert("验证码无效！");
+				if($(".S1_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S1_1_q')", 1000 );
+					setTimeout("DisplayTopic('.S1_1_a')", 1000 );			
+				}	
+			}
+			else if (json["error"] == "user exists." )
+			{
+				bInvalid = 1; 
+				alert("抱歉！您已经完成过问卷");			
+			}
+			else
+			{
+				RecordID = json["id"];
+				if($(".S1_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S1_1_q')", 1000 );
+					setTimeout("DisplayTopic('.S1_1_a')", 1000 );			
+				}				
+				console.log(json);
+			}
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});	
+}
+
+function EditRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});		
+}
+
+
+function onUserSelect(question, answer) {
+	
+	var result = answer; 
+// deliver to the server 
+	
+	if ( RecordID == 0 )
+		answerData['Survey'] = {};	
+			
+	var x; 
+	if (question < 10)
+		x = "q0";
+	else
+		x = "q";
+		
+	answerData['Survey'][x+ question.toString()] = result; 	
+
+	console.log(answerData);
+
+	if ( RecordID == 0 )
+	{
+		if ( bPhone == 1)
+			CreateRecord_Phone(answerData);
+		else
+			CreateRecord_Code(answerData);
+	}
+	else
+		EditRecord(answerData);
+}
+
+function browserRedirect() {
+	var sUserAgent = navigator.userAgent.toLowerCase();
+	var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+	if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+		//alert("phone");
+	} else {
+		//alert("pc");
+	}
+}
+
+function onSuccess() {
+	var url="Finish.html";
+	window.location=encodeURI(encodeURI(url));
+}
+
+
+function submit_result()
+{
+   $.ajax({
+		type: "post",
+		url: "/surveys/edit/12.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			if(err.status === 200) {
+				console.error(err);
+			}
+			else
+			{
+				alert("提交失败，请检查您的网络设置");
+			}
+		}
+
+	});	
+}
+
+function FinishRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+/*	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			window.location.href='Finish.html';	
+		},
+		error: function (err) {
+			console.error(err);
+			alert("提交失败，请检查您的网络设置");
+		}
+
+	});	*/
+}
+
+function Final_submit()
+{
+//	onUserSelect(question, answer)
+//	window.location.href='Finish.html';
+
+	var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
+	var time = new Date();
+	answerData['Survey']['q47'] = time.getTime();	
+	answerData['Survey']['q48'] = 1; 	
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			bingo = json["bingo"];
+			
+			if (bingo == 1)
+			{
+				window.location.href='Finish1.html';
+			}
+			else
+			{
+				window.location.href='Finish2.html';			
+			}
+		},
+		error: function (err) {
+			console.error(err);
+//			alert("请检查您的网络设置");
+			window.location.href='Finish2.html';
+		}
+
+	});	
+}
+
+function OKforPre1a_2()
+{
+	bPhone = 0;
+	Answer = document.getElementById("Pre1a_Answer2").value;
+	if (Answer !="")
+	{
+		var re = /^\s+$/;
+		if (re.exec(Answer))
+		{
+		}
+		else
+		{
+			onUserSelect(1, Answer );	
+		}		
+	}	
+}
+
+
+function OKforS1()
+{
+		
+		$(".S1a_q").hide();
+		$(".S1a_a").hide();	
+		$(".S1b_q").hide();
+		$(".S1b_a").hide();	
+		$(".S1c_q").hide();
+		$(".S1c_a").hide();	
+		$(".S1d_q").hide();
+		$(".S1d_a").hide();	
+		$(".S1e_q").hide();
+		$(".S1e_a").hide();	
+		
+		var answer = $('input[name="QuestionS1_1"]:checked').val();
+		
+		if ( answer == 1 || answer == 2 || answer == 3 || answer == 4 )
+		{
+			if($(".S2_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S2_q')", 1000 );
+				setTimeout("DisplayTopic('.S2_a')", 1000 );
+			}		
+		}		
+		else if (answer == 5)
+		{
+			if($(".S1a_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S1a_q')", 1000 );
+				setTimeout("DisplayTopic('.S1a_a')", 1000 );
+			}
+		}		
+		else if (answer == 6)
+		{
+			if($(".S1b_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S1b_q')", 1000 );
+				setTimeout("DisplayTopic('.S1b_a')", 1000 );
+			}		
+		}
+		else if (answer == 7)
+		{
+			if($(".S1c_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S1c_q')", 1000 );
+				setTimeout("DisplayTopic('.S1c_a')", 1000 );
+			}				
+		}		
+		else if (answer == 8)
+		{
+			if($(".S1d_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S1d_q')", 1000 );
+				setTimeout("DisplayTopic('.S1d_a')", 1000 );
+			}			
+		}
+		else if (answer == 10)
+		{
+			if($(".S1e_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S1e_q')", 1000 );
+				setTimeout("DisplayTopic('.S1e_a')", 1000 );
+			}		
+		}	
+		else 
+		{
+			if($(".S2_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S2_q')", 1000 );
+				setTimeout("DisplayTopic('.S2_a')", 1000 );
+			}									
+		}
+		
+		Value_S1 = answer;
+		onUserSelect(2, answer );
+		
+		if( answer == 99)
+		{	
+			var  otherchoice = document.getElementById("S1_other").value;
+			onUserSelect(61, otherchoice );
+		}
+}
+
+function OKforA2a()
+{
+	Answer = document.getElementById("A2a_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A3_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A3_q')", 1000 );
+			setTimeout("DisplayTopic('.A3_a')", 1000 );			
+		}
+		
+		if (Answer.length <= 50)
+			onUserSelect(11, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(11, str1 );
+			onUserSelect(12, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 100);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(11, str1 );
+			onUserSelect(12, str2 );			
+			onUserSelect(13, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 100);
+			var str3 = Answer.substr(100, 150);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(11, str1 );
+			onUserSelect(12, str2 );			
+			onUserSelect(13, str3 );		
+			onUserSelect(14, str4 );
+		}				
+	}
+}
+
+function CancelforA2a()
+{
+	if($(".A3_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A3_q')", 1000 );
+		setTimeout("DisplayTopic('.A3_a')", 1000 );			
+	}
+}
+
+function OKforA2c()
+{
+	Answer = document.getElementById("A2c_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A3_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A3_q')", 1000 );
+			setTimeout("DisplayTopic('.A3_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(15, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(15, str1 );
+			onUserSelect(16, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(15, str1 );
+			onUserSelect(16, str2 );			
+			onUserSelect(17, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100, 50);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(15, str1 );
+			onUserSelect(16, str2 );			
+			onUserSelect(17, str3 );		
+			onUserSelect(18, str4 );
+		}	
+	}
+}
+
+function CancelforA2c()
+{
+	if($(".A3_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A3_q')", 1000 );
+		setTimeout("DisplayTopic('.A3_a')", 1000 );			
+	}
+}
+
+function OKforA5b()
+{
+	Answer = document.getElementById("A5b_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A6_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A6_q')", 1000 );
+			setTimeout("DisplayTopic('.A6_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(23, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(23, str1 );
+			onUserSelect(24, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(23, str1 );
+			onUserSelect(24, str2 );			
+			onUserSelect(25, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100, 50);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(23, str1 );
+			onUserSelect(24, str2 );			
+			onUserSelect(25, str3 );		
+			onUserSelect(26, str4 );
+		}	
+	}
+}
+
+function CancelforA5b()
+{
+	if($(".A6_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A6_q')", 1000 );
+		setTimeout("DisplayTopic('.A6_a')", 1000 );			
+	}
+}
+
+function OKforA7b()
+{
+	Answer = document.getElementById("A7b_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A8_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A8_q')", 1000 );
+			setTimeout("DisplayTopic('.A8_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(31, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(31, str1 );
+			onUserSelect(32, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(31, str1 );
+			onUserSelect(32, str2 );			
+			onUserSelect(33, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100, 50);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(31, str1 );
+			onUserSelect(32, str2 );			
+			onUserSelect(33, str3 );		
+			onUserSelect(34, str4 );
+		}	
+	}
+}
+
+function CancelforA7b()
+{
+	if($(".A8_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A8_q')", 1000 );
+		setTimeout("DisplayTopic('.A8_a')", 1000 );			
+	}
+}
+
+function OKforA8b()
+{
+	Answer = document.getElementById("A8b_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A9_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A9_q')", 1000 );
+			setTimeout("DisplayTopic('.A9_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(37, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(37, str1 );
+			onUserSelect(38, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(37, str1 );
+			onUserSelect(38, str2 );			
+			onUserSelect(39, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100, 50);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(37, str1 );
+			onUserSelect(38, str2 );			
+			onUserSelect(39, str3 );		
+			onUserSelect(40, str4 );
+		}
+	}
+}
+
+function CancelforA8b()
+{
+	if($(".A9_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A9_q')", 1000 );
+		setTimeout("DisplayTopic('.A9_a')", 1000 );			
+	}
+}
+
+function OKforA11a()
+{
+	Answer = document.getElementById("A11a_Answer").value;
+	if (Answer !="")
+	{
+		if($(".B1_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.B1_q')", 1000 );
+			setTimeout("DisplayTopic('.B1_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(54, Answer );	
+		else if (Answer.length <= 100)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(54, str1 );
+			onUserSelect(55, str2 );			
+		}
+		else if ( Answer.length <= 150)
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100);
+			
+			onUserSelect(54, str1 );
+			onUserSelect(55, str2 );			
+			onUserSelect(56, str3 );						
+		}		
+		else 
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50, 50);
+			var str3 = Answer.substr(100, 50);
+			var str4 = Answer.substr(150);
+			
+			onUserSelect(54, str1 );
+			onUserSelect(55, str2 );			
+			onUserSelect(56, str3 );		
+			onUserSelect(57, str4 );
+		}
+	}
+}
+
+function CancelforA11a()
+{
+	if($(".B1_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.B1_q')", 1000 );
+		setTimeout("DisplayTopic('.B1_a')", 1000 );			
+	}
+}
+
+$(function(){ 
+	browserRedirect();
+	var d = new Date();
+	var now = "";	
+	var numofq1 = 3;
+	
+	setTimeout("DisplayTopic('.Pre')", 0 );
+	setTimeout("DisplayTopic('.Pre_a2')", 1000 );
+	
+	$(".Prea").click(function(){
+	
+		var answer = $('input[name="PreQuestion_1"]:checked').val();
+		
+		if (answer == 1)
+		{
+			$(".S1a_a2").hide();
+			$(".S1a_a1").show();
+			RecordID = 0;
+		}
+		else if (answer == 2)
+		{
+			$(".S1a_a1").hide();
+			$(".S1a_a2").show();		
+			RecordID = 0;
+		}
+		
+	});
+	
+	
+	$(".S1a").click(function(){
+	
+		var checks = document.getElementsByName("QuestionS1a");
+		var answer;
+		for(i=0;i<checks.length;i++){
+			if(checks[i].checked)
+			{
+				if (i == 0)
+					answer = "1";
+				else
+					answer = answer + "1";
+			}
+			else
+			{
+				if (i == 0)
+					answer = "0";
+				else
+					answer = answer + "0";				
+			}
+		}	
+		if($(".S2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S2_q')", 1000 );
+			setTimeout("DisplayTopic('.S2_a')", 1000 );
+		}
+		
+		onUserSelect(3, answer );
+	});	
+	
+	$(".S1b").click(function(){
+	
+		var checks = document.getElementsByName("QuestionS1b");
+		var answer;
+
+		for(i=0;i<checks.length;i++){
+			if(checks[i].checked)
+			{
+				if (i == 0)
+					answer = "1";
+				else
+					answer = answer + "1";
+			}
+			else
+			{
+				if (i == 0)
+					answer = "0";
+				else
+					answer = answer + "0";				
+			}
+		}	
+		
+		if($(".S2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S2_q')", 1000 );
+			setTimeout("DisplayTopic('.S2_a')", 1000 );
+		}
+		
+		onUserSelect(4, answer );
+	});		
+	
+	$(".S1c").click(function () {
+	
+		var checks = document.getElementsByName("QuestionS1c");
+		var answer;
+
+		for(i=0;i<checks.length;i++){
+			if(checks[i].checked)
+			{
+				if (i == 0)
+					answer = "1";
+				else
+					answer = answer + "1";
+			}
+			else
+			{
+				if (i == 0)
+					answer = "0";
+				else
+					answer = answer + "0";				
+			}
+		}	
+			
+		if($(".S2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S2_q')", 1000 );
+			setTimeout("DisplayTopic('.S2_a')", 1000 );
+		}
+
+	    onUserSelect(5, answer);
+	});
+	
+	$(".S1d").click(function(){
+	
+		var checks = document.getElementsByName("QuestionS1d");
+		var answer;
+
+		for(i=0;i<checks.length;i++){
+			if(checks[i].checked)
+			{
+				if (i == 0)
+					answer = "1";
+				else
+					answer = answer + "1";
+			}
+			else
+			{
+				if (i == 0)
+					answer = "0";
+				else
+					answer = answer + "0";				
+			}
+		}	
+			
+		if($(".S2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S2_q')", 1000 );
+			setTimeout("DisplayTopic('.S2_a')", 1000 );
+		}
+
+		onUserSelect(6, answer );
+
+	});		
+
+	$(".S1e").click(function () {
+		
+		var checks = document.getElementsByName("QuestionS1e");
+		var answer;
+
+		if (checks[1].checked)
+			Value_S1e = 1;
+		else
+			Value_S1e = 0;
+		
+		for(i=0;i<checks.length;i++){
+			if(checks[i].checked)
+			{
+				if (i == 0)
+					answer = "1";
+				else
+					answer = answer + "1";
+			}
+			else
+			{			
+				if (i == 0)
+					answer = "0";
+				else
+					answer = answer + "0";				
+			}
+		}	
+		
+	
+		if($(".S2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S2_q')", 1000 );
+			setTimeout("DisplayTopic('.S2_a')", 1000 );
+		}
+
+	    onUserSelect(7, answer);
+
+	});		
+		
+	$(".S2").click(function(){	
+		var answer = $('input[name="QuestionS2"]:checked').val();	
+		if ( answer == 1)
+		{
+			$(".S3_q").hide();
+			$(".S3_a").hide();			
+			if($(".A1_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A1_q')", 1000 );
+				setTimeout("DisplayTopic('.A1_a')", 1000 );
+			}	
+		}
+		else
+		{
+			$(".A1_q").hide();
+			$(".A1_a").hide();			
+			if($(".S3_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.S3_q')", 1000 );
+				setTimeout("DisplayTopic('.S3_a')", 1000);
+			}	
+		}
+		onUserSelect(8, answer );	
+	});	
+	
+	$(".S3").click(function(){
+		
+		var answer = $('input[name="QuestionS3"]:checked').val();
+		
+		if($(".A9_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A9_q')", 1000 );
+			setTimeout("DisplayTopic('.A9_a')", 1000 );
+		}			
+		onUserSelect(9, answer );			
+	});	
+	
+	$(".A1").click(function(){
+		
+		var answer = $('input[name="QuestionA1"]:checked').val();
+		
+		if ( answer <= 7)
+		{
+			$(".A2b_q").hide();
+			$(".A2b_a").hide();
+			$(".A2c_q").hide();
+			$(".A2c_a").hide();			
+			
+			if($(".A2a_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A2a_q')", 1000 );
+				setTimeout("DisplayTopic('.A2a_a')", 1000 );
+			}	
+		}
+
+		else 
+		{
+			$(".A2a_q").hide();
+			$(".A2a_a").hide();
+			$(".A2b_q").hide();
+			$(".A2b_a").hide();			
+			
+			if($(".A2c_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A2c_q')", 1000 );
+				setTimeout("DisplayTopic('.A2c_a')", 1000 );
+			}			
+		}
+
+		onUserSelect(10, answer );	
+	});		
+	
+	$(".A3").click(function(){
+		
+		var answer = $('input[name="QuestionA3"]:checked').val();
+
+		if($(".A4_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A4_q')", 1000 );
+			setTimeout("DisplayTopic('.A4_a')", 1000 );			
+		}	
+
+		onUserSelect(19, answer );	
+	});		
+
+	$(".A4").click(function(){
+		
+		var answer = $('input[name="QuestionA4"]:checked').val();
+
+		if($(".A5_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A5_q')", 1000 );
+			setTimeout("DisplayTopic('.A5_a')", 1000 );			
+		}	
+
+		onUserSelect(20, answer );	
+	});		
+	
+	$(".A5").click(function(){
+		
+		var answer = $('input[name="QuestionA5"]:checked').val();
+
+		if($(".A5a_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A5a_q')", 1000 );
+			setTimeout("DisplayTopic('.A5a_a')", 1000 );			
+		}	
+
+		onUserSelect(21, answer );	
+	});		
+	
+	$(".A5a").click(function(){
+		
+		var answer = $('input[name="QuestionA5a"]:checked').val();
+
+		if (answer == 4)
+		{
+			if($(".A5b_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A5b_q')", 1000 );
+				setTimeout("DisplayTopic('.A5b_a')", 1000 );			
+			}			
+		}
+		else
+		{
+			if($(".A6	").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A6_q')", 1000 );
+				setTimeout("DisplayTopic('.A6_a')", 1000 );			
+			}	
+		}
+		onUserSelect(22, answer );	
+	});		
+	
+	$(".A6").click(function(){
+		
+		var answer = $('input[name="QuestionA6"]:checked').val();
+
+		if($(".A6a_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A6a_q')", 1000 );
+			setTimeout("DisplayTopic('.A6a_a')", 1000 );			
+		}	
+
+		onUserSelect(27, answer );	
+	});	
+
+	$(".A6a").click(function(){
+		
+		var answer = $('input[name="QuestionA6a"]:checked').val();
+
+		if($(".A7_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A7_q')", 1000 );
+			setTimeout("DisplayTopic('.A7_a')", 1000 );			
+		}	
+
+		onUserSelect(28, answer );	
+	});		
+	
+	$(".A7").click(function(){
+		
+		var answer = $('input[name="QuestionA7"]:checked').val();
+
+		if($(".A7a_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A7a_q')", 1000 );
+			setTimeout("DisplayTopic('.A7a_a')", 1000 );			
+		}	
+
+		onUserSelect(29, answer );	
+	});		
+
+	$(".A7a").click(function(){
+	
+		var answer = $('input[name="QuestionA7a"]:checked').val();
+
+		if (answer == 1 )
+		{
+			if($(".A8_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A8_q')", 1000 );
+				setTimeout("DisplayTopic('.A8_a')", 1000 );			
+			}	
+		}
+		else
+		{
+			if($(".A7b_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A7b_q')", 1000 );
+				setTimeout("DisplayTopic('.A7b_a')", 1000 );			
+			}			
+		}
+
+		onUserSelect(30, answer );		
+	});	
+
+	$(".A8").click(function(){
+		
+		var answer = $('input[name="QuestionA8"]:checked').val();
+
+		if($(".A8a_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A8a_q')", 1000 );
+			setTimeout("DisplayTopic('.A8a_a')", 1000 );			
+		}	
+
+		onUserSelect(35, answer );	
+	});	
+
+	$(".A8a").click(function(){
+		
+		var answer = $('input[name="QuestionA8a"]:checked').val();
+		if ( answer == 1)
+		{
+			if($(".B1_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A9_q')", 1000 );
+				setTimeout("DisplayTopic('.A9_a')", 1000 );			
+			}			
+		}
+		else if ( answer != 4)
+		{
+			$("#A8b_Text").html("请主人描述下具体是什么问题客服人员需要查询呢？");
+			if($(".A8b_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A8b_q')", 1000 );
+				setTimeout("DisplayTopic('.A8b_a')", 1000 );			
+			}	
+		}
+		else
+		{
+			$("#A8b_Text").html("请主人描述下具体是什么问题客服人员无法回答呢？");
+			if($(".A8b_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A8b_q')", 1000 );
+				setTimeout("DisplayTopic('.A8b_a')", 1000 );			
+			}			
+		
+		}
+		onUserSelect(36, answer );	
+	});		
+
+	$(".A9").click(function(){
+		
+		var answer = $('input[name="QuestionA9"]:checked').val();
+
+		if($(".A9a_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A9a_q')", 1000 );
+			setTimeout("DisplayTopic('.A9a_a')", 1000 );			
+		}	
+
+		onUserSelect(41, answer );	
+	});		
+	
+	$(".A9a_1, .A9a_2, .A9a_3").click(function(){
+		
+		var answer1 = $('input[name="QuestionA9a_1"]:checked').val();
+		var answer2 = $('input[name="QuestionA9a_2"]:checked').val();
+		var answer3 = $('input[name="QuestionA9a_3"]:checked').val();
+				
+		if ( ((answer1 == 1) || (answer1 == 2) || (answer1 == 99))
+		  && ((answer2 == 1) || (answer2 == 2) || (answer2 == 99))
+		  && ((answer3 == 1) || (answer3 == 2) || (answer3 == 99))) 
+		  {
+		  
+			if ($(".A9a_2_q").is(":hidden")) {
+				setTimeout("DisplayTopic('.A9a_2_q')", 1000);
+				setTimeout("DisplayTopic('.A9a_2_a')", 1000);				
+			}
+
+			onUserSelect(42, answer1 );	
+			onUserSelect(43, answer2 );	
+			onUserSelect(44, answer3 );	
+		}
+	});	
+
+	$(".A9a_4, .A9a_5").click(function(){
+		
+		var answer4 = $('input[name="QuestionA9a_4"]:checked').val();		
+		var answer5 = $('input[name="QuestionA9a_5"]:checked').val();				
+				
+		if ( ((answer4 == 1) || (answer4 == 2) || (answer4 == 99))		  
+		  && ((answer5 == 1) || (answer5 == 2) || (answer5 == 99))) 
+		  {
+		  
+			if ( Value_S1 == 7)
+			{
+				if ($(".A10_q").is(":hidden")) {
+					setTimeout("DisplayTopic('.A10_q')", 1000);
+					setTimeout("DisplayTopic('.A10_a')", 1000);				
+				}				
+			}
+			else if ( Value_S1 == 4 || Value_S1e == 1 )
+			{
+				if ( Value_S1 == 4)
+					$("#A11_Text").html("以下哪个情况最符合主人在办理激活卡片业务时的情景呢？【单选】");
+				else
+					$("#A11_Text").html("以下哪个情况最符合主人在办理账单分期业务时的情景呢？【单选】");				
+				if ($(".A10_q").is(":hidden")) {
+					setTimeout("DisplayTopic('.A11_q')", 1000);
+					setTimeout("DisplayTopic('.A11_a')", 1000);				
+				}					
+			}
+			else
+			{
+				if ($(".B1_q").is(":hidden")) {
+					setTimeout("DisplayTopic('.B1_q')", 1000);
+					setTimeout("DisplayTopic('.B1_a')", 1000);				
+				}
+			}	
+			onUserSelect(45, answer4 );	
+			onUserSelect(51, answer5 );	
+		}
+	});		
+	
+
+	$(".A10").click(function(){
+		
+		var answer = $('input[name="QuestionA10"]:checked').val();
+
+		if($(".B1_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.B1_q')", 1000 );
+			setTimeout("DisplayTopic('.B1_a')", 1000 );			
+		}	
+
+		onUserSelect(52, answer );	
+	});	
+
+	$(".A11").click(function(){
+		
+		var answer = $('input[name="QuestionA11"]:checked').val();
+
+		if ( answer == 1 || answer == 2)
+		{
+			if($(".B1_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.B1_q')", 1000 );
+				setTimeout("DisplayTopic('.B1_a')", 1000 );			
+			}	
+		}
+		else 
+		{
+			if ( answer == 3 )
+				$("#A11a_Text").html("请问主人在哪个环节操作失败？");
+			else
+				$("#A11a_Text").html("请问主人操作成功后再转接人工服务的原因是什么？");
+			if($(".A11a_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A11a_q')", 1000 );
+				setTimeout("DisplayTopic('.A11a_a')", 1000 );			
+			}			
+		}
+		onUserSelect(53, answer );	
+	});	
+	
+	$(".B1").click(function(){
+		
+		var answer = $('input[name="QuestionB1"]:checked').val();
+		if($(".B2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.B2_q')", 1000 );
+			setTimeout("DisplayTopic('.B2_a')", 1000 );			
+		}	
+		onUserSelect(58, answer );	
+	});	
+
+	$(".B2").click(function(){
+		
+		var answer = $('input[name="QuestionB2"]:checked').val();
+		if ( answer == 3 )
+		{
+			if($(".Topic00").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.Topic00')", 1000 );
+				setTimeout("DisplayTopic('.Submission')", 1000);
+			}				
+		}
+		else
+		{
+			if($(".B3_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.B3_q')", 1000 );
+				setTimeout("DisplayTopic('.B3_a')", 1000 );			
+			}	
+		}	
+		onUserSelect(59, answer );	
+	});		
+	
+	$(".B3").click(function(){
+		
+		var answer = $('input[name="QuestionB3"]:checked').val();
+
+		if($(".Topic00").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.Topic00')", 1000 );
+			setTimeout("DisplayTopic('.Submission')", 1000);
+		}		
+
+		onUserSelect(60, answer );	
+	});		
+////	
+	
+//	setTimeout("DisplayTopic('.Submission')", 1000);
+
+});
+</script>
+
+</head>
+<body style="background-image: url(bg.jpg);">
+<br/>
+
+<div class="Pre" style="Display: none">
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+			<section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+			</section>
+		</section>
+		
+		<section style="margin-left: 10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color:  rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+				    嗨 ! 主人前两天给小龙打过电话了吧，小龙好希望知道主人的想法，这会让小龙下次做得更好哦。
+					<br>
+					<br>					
+					首先嘛，主人得填一下收到的验证码，这样小龙才能认出主人哦
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Pre_a2" style="Display: none">
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);" >
+				<section  style="box-sizing: border-box;">
+					<div class="S1a_a_controls">
+						<div class="bg">
+							<p class="choice" style="padding: 0;">	
+								<textarea class = "Pre1a" id="Pre1a_Answer2" name="QuestionPre1a" style="width:100%;height:80px; font-size: 0.9em" placeholder="请填写中文验证码" ></textarea>																						
+							</p>	
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforPre1a_2()">确 认</a>	
+								</div>							
+						</div>
+					</div>					
+				</section>
+			</section> 
+		</section>
+		
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		
+	</section>
+</div>	
+	
+<div class="S1_1_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    主人当时来办啥业务呢？【单选】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1_1_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="1" id="1_1"><label for="1_1">卡片申办咨询与进度查询</label></input>
+						</p>
+						<p class="choice">														
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="4" id="1_4"><label for="1_4">激活卡片</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="5" id="1_5"><label for="1_5">查账</label></input>
+						</p>
+						<p class="choice">														
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="6" id="1_6"><label for="1_6">额度</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="7" id="1_7"><label for="1_7">还款</label></input>
+						</p>
+						<p class="choice">														
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="8" id="1_8"><label for="1_8">积分</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="9" id="1_9"><label for="1_9">营销优惠活动</label></input>
+						</p>
+						<p class="choice">							
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="10" id="1_10"><label for="1_10">分期付款</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="11" id="1_11"><label for="1_11">资料修改</label></input>
+                        </p>	
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="12" id="1_12"><label for="1_12">挂失</label></input>
+						</p>
+						<p class="choice">							
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="13" id="1_13"><label for="1_13">停卡</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="14" id="1_14"><label for="1_14">投诉</label></input>
+                        </p>		
+                        <p class="choice">
+                            <input class="S1_1" name="QuestionS1_1" type="radio" value="99" id="1_15"><label for="1_15">其他</label></input>
+							<input class="S1_1" name="QuestionS1_1" type="text" id="S1_other" style="width:100px;font-size: 0.9em" placeholder="请注明"></input>								
+                        </p>	
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1()">确 认</a>	
+						</div>	
+						
+					</div>				
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>		
+
+<div class="S1_2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    那么是以下业务吗？【单选】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1_2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">														
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="8" id="1_8"><label for="1_8">积分</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="9" id="1_9"><label for="1_9">营销优惠活动</label></input>
+						</p>
+						<p class="choice">							
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="10" id="1_10"><label for="1_10">分期付款（咨询、申请等）</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="11" id="1_11"><label for="1_11">资料修改</label></input>
+                        </p>	
+                        <p class="choice">
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="12" id="1_12"><label for="1_12">挂失</label></input>
+						</p>
+						<p class="choice">							
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="13" id="1_13"><label for="1_13">停卡</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="14" id="1_14"><label for="1_14">投诉</label></input>
+                        </p>		
+                        <p class="choice">
+                            <input class="S1_2" name="QuestionS1_2" type="radio" value="99" id="1_15"><label for="1_15">其他</label></input>
+							<input class="S1_2" name="QuestionS1_2" type="text" id="S1_other" style="width:100px;font-size: 0.9em" placeholder="请注明"></input>								
+                        </p>	
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1()">确 认</a>	
+						</div>							
+					</div>				
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>		
+
+<div class="S1a_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    具体办理的是…？【可以选多个】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1a_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="11" id="2_1"><label for="2_1">本期账单金额</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="12" id="2_2"><label for="2_2">核对本期账单明细</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="13" id="2_3"><label for="2_3">查询当前总欠款</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="14" id="2_4"><label for="2_4">查询还款日</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="19" id="2_5"><label for="2_5">查询还款到账情况</label></input>
+                        </p>	
+                        <p class="choice">
+                            <input class="S1a" name="QuestionS1a" type="checkbox" value="19" id="2_6"><label for="2_6">其他</label></input>
+                        </p>						
+					</div>				
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S1b_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    具体办理的是…？【可以选多个】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1b_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "S1b" name="QuestionS1b" type="checkbox" value="31" id="3_1"><label for="3_1">查询当前可用额度</label></input>
+						</p>	
+						<p class="choice">	
+                            <input class="S1b" name="QuestionS1b" type="checkbox" value="32" id="3_2"><label for="3_2">调整临时额度</label></input>
+						</p>	
+                        <p class="choice">
+                            <input class="S1b" name="QuestionS1b" type="checkbox" value="33" id="3_3"><label for="3_3">调整永久额度</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1b" name="QuestionS1b" type="checkbox" value="34" id="3_4"><label for="3_4">咨询额度相关政策</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="S1b" name="QuestionS1b" type="checkbox" value="35" id="3_5"><label for="3_5">其他</label></input>
+                        </p>									
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S1c_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    具体办理的是…？【可以选多个】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1c_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="S1c_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="S1c" name="QuestionS1c" type="checkbox" value="41" id="4_1"><label for="4_1">人民币还款</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1c" name="QuestionS1c" type="checkbox" value="42" id="4_2"><label for="4_2">用人民币购买外币偿还外币账单</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1c" name="QuestionS1c" type="checkbox" value="43" id="4_3"><label for="4_3">其他</label></input>
+                            </p>						
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S1d_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    具体办理的是…？【可以选多个】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1d_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="S1d_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="S1d" name="QuestionS1d" type="checkbox" value="51" id="5_1"><label for="5_1">查询积分</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1d" name="QuestionS1d" type="checkbox" value="52" id="5_2"><label for="5_2">兑换积分</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1d" name="QuestionS1d" type="checkbox" value="53" id="5_3"><label for="5_3">查询兑换商品邮寄进度</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1d" name="QuestionS1d" type="checkbox" value="59" id="5_4"><label for="5_4">其他</label></input>
+                            </p>				
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S1e_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    具体办理的是…？【可以选多个】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S1e_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="S1e_a_controls">
+						<div class="bg">
+							<p class="choice">	
+								<input class = "S1e" name="QuestionS1e" type="checkbox" value="61" id="6_1"><label for="6_1">现金分期</label></input>
+							</p>	
+							<p class="choice">	
+                                <input class="S1e" name="QuestionS1e" type="checkbox" value="62" id="6_2"><label for="6_2">账单分期</label></input>
+							</p>
+                            <p class="choice">
+                                <input class="S1e" name="QuestionS1e" type="checkbox" value="63" id="6_3"><label for="6_3">装修分期</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1e" name="QuestionS1e" type="checkbox" value="69" id="6_4"><label for="6_4">汽车分期</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S1e" name="QuestionS1e" type="checkbox" value="69" id="6_4"><label for="6_4">商场POS分期（银行合作商户现场直接刷卡分期）</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    当时有没有转接到人工服务呢？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="S2_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="S2" name="QuestionS2" type="radio" value="1" id="7_1"><label for="7_1">是</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S2" name="QuestionS2" type="radio" value="2" id="7_2"><label for="7_2">否</label></input>
+                            </p>
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="S3_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    没有转接到人工服务的原因是什么呢？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="S3_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="S3_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="S3" name="QuestionS3" type="radio" value="1" id="8_1"><label for="8_1">通过自助语音完成了业务办理</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="S3" name="QuestionS3" type="radio" value="2" id="8_2"><label for="8_2">人工服务无法接通</label></input>
+                            </p>
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A1_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        如果要给这次拨打电话的整体体验打分，（包括人工服务，转接人工服务的等待时间和自助语音），主人会给几分呢？（想想就好紧张啊~~）
+                    </section>
+                </section>
+            </section>
+        </section>
+</div>
+	
+<div class="A1_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A1_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A1" name="QuestionA1" type="radio" value="10" id="9_10"><label for="9_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A1" name="QuestionA1" type="radio" value="8" id="9_8"><label for="9_8">4分(满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A1" name="QuestionA1" type="radio" value="6" id="9_6"><label for="9_6">3分(一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A1" name="QuestionA1" type="radio" value="4" id="9_4"><label for="9_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A1" name="QuestionA1" type="radio" value="2" id="9_2"><label for="9_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+</div>
+
+<div class="A2a_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        很难过让主人不满意了，能告诉小龙发生了什么吗？任何吐槽或是建议小龙都想听哦，小龙好想下次能做得更好。
+                    </section>
+                </section>
+            </section>
+        </section>
+</div>
+
+<div class="A2a_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A2a_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A2a" id="A2a_Answer" name="QuestionA2a" style="width:100%;height:80px; font-size: 0.9em; box-sizing: border-box;"></textarea>														
+                                </p>
+								<br>
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA2a()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA2a()">跳 过</a>
+								</div>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+</div>
+
+<div class="A2b_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        主人有什么想对小龙说的吗？任何吐槽、建议或是夸奖小龙都想听哦，因为小龙好想下次能做得更好！
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+
+<div class="A2b_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A2b_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A2b" id="A2b_Answer" name="QuestionA2b" style="width:100%;height:80px; font-size: 0.9em" ></textarea>																							
+                                </p>
+								<br>
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA2b()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA2b()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A2c_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        主人满意小龙也好开心~！能告诉小龙哪里做的不错么，小龙想一直保持下去啊！
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A2c_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A2c_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A2c" id="A2c_Answer" name="QuestionA2c" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA2c()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA2c()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A3_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        请主人对转接人工服务的等待时间打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A3_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A3_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A3" name="QuestionA3" type="radio" value="10" id="18_10"><label for="18_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A3" name="QuestionA3" type="radio" value="8" id="18_8"><label for="18_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A3" name="QuestionA3" type="radio" value="6" id="18_6"><label for="18_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A3" name="QuestionA3" type="radio" value="4" id="18_4"><label for="18_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A3" name="QuestionA3" type="radio" value="2" id="18_2"><label for="18_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A4_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        在这次通话中，人工服务的表现如何呢？也给TA打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A4_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A4_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A4" name="QuestionA4" type="radio" value="10" id="19_10"><label for="19_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A4" name="QuestionA4" type="radio" value="8" id="19_8"><label for="19_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A4" name="QuestionA4" type="radio" value="6" id="19_6"><label for="19_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A4" name="QuestionA4" type="radio" value="4" id="19_4"><label for="19_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A4" name="QuestionA4" type="radio" value="2" id="19_2"><label for="19_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+	
+<div class="A5_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        请主人对问题解决情况打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A5_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A5_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A5" name="QuestionA5" type="radio" value="10" id="20_10"><label for="20_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A5" name="QuestionA5" type="radio" value="8" id="20_8"><label for="20_8">4分 (满意)</label></input>
+                                </p>
+                                 <p class="choice">
+                                    <input class="A5" name="QuestionA5" type="radio" value="6" id="20_6"><label for="20_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A5" name="QuestionA5" type="radio" value="4" id="20_4"><label for="20_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A5" name="QuestionA5" type="radio" value="2" id="20_2"><label for="20_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A5a_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    请问主人的问题解决了吗？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A5a_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A5a_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A5a" name="QuestionA5a" type="radio" value="1" id="21_1"><label for="21_1">当场有效解决</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A5a" name="QuestionA5a" type="radio" value="2" id="21_2"><label for="21_2">无法当场解决，但客服人员能耐心解释，令我信服</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A5a" name="QuestionA5a" type="radio" value="3" id="21_3"><label for="21_3">无法当场解决，但客服人员提供了有效的替代措施</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A5a" name="QuestionA5a" type="radio" value="4" id="21_4"><label for="21_4">未能解决问题，客服人员也没有提供其他方案</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+<div class="A5b_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        能告诉小龙什么问题没能解决？客服人员如何改进能让您满意？ 
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A5b_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A5b_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A5b" id="A5b_Answer" name="QuestionA5b" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA5b()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA5b()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A6_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        给客服人员的服务态度打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A6_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A6_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A6" name="QuestionA6" type="radio" value="10" id="24_10"><label for="24_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A6" name="QuestionA6" type="radio" value="8" id="24_8"><label for="24_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A6" name="QuestionA6" type="radio" value="6" id="24_6"><label for="24_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A6" name="QuestionA6" type="radio" value="4" id="24_4"><label for="24_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A6" name="QuestionA6" type="radio" value="2" id="24_2"><label for="24_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A6a_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    在以下这些服务态度具体的方面，您觉得小龙的客服人员符合哪一项呢？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A6a_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A6a_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A6a" name="QuestionA6a" type="radio" value="1" id="25_1"><label for="25_1">客服人员热诚、礼貌、耐心</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A6a" name="QuestionA6a" type="radio" value="2" id="25_2"><label for="25_2">客服人员态度亲切、自然</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A6a" name="QuestionA6a" type="radio" value="3" id="25_3"><label for="25_3">客服人员语气冷淡，爱理不理</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A6a" name="QuestionA6a" type="radio" value="4" id="25_4"><label for="25_4">客服人员回答仓促，急于挂断电话</label></input>
+                            </p>	
+                            <p class="choice">
+                                <input class="A6a" name="QuestionA6a" type="radio" value="5" id="25_5"><label for="25_5">客服人员语气强硬，有反问或质问的情况</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>		
+
+<div class="A7_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        给客服人员的沟通能力打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A7_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A7_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A7" name="QuestionA7" type="radio" value="10" id="26_10"><label for="26_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A7" name="QuestionA7" type="radio" value="8" id="26_8"><label for="26_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A7" name="QuestionA7" type="radio" value="6" id="26_6"><label for="26_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A7" name="QuestionA7" type="radio" value="4" id="26_4"><label for="26_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A7" name="QuestionA7" type="radio" value="2" id="26_2"><label for="26_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A7a_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    在以下这些沟通能力具体的方面，您觉得小龙的客服人员符合哪项呢？【单选】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A7a_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A7a_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A7a" name="QuestionA7a" type="radio" value="1" id="27_1"><label for="27_1">客服人员的措辞通俗易懂、逻辑清晰</label></input>
+                            </p>					
+                            <p class="choice">
+                                <input class="A7a" name="QuestionA7a" type="radio" value="2" id="27_2"><label for="27_2">客服人员的有些回答不容易理解，询问之后，使用了我能理解的方式回答</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A7a" name="QuestionA7a" type="radio" value="3" id="27_3"><label for="27_3">客服人员经常使用生僻的专业术语，多次询问后我仍然不能理解</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A7a" name="QuestionA7a" type="radio" value="4" id="27_4"><label for="27_4">客服人员表达逻辑混乱，解释不到位，没讲清楚，完全无法理解TA所说的内容</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+<div class="A7b_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        能告诉小龙当时的具体情况吗？客服人员的哪些解释或用词较难理解？  
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A7b_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A7b_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A7b" id="A7b_Answer" name="QuestionA7b" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA7b()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA7b()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A8_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        给客服人员的业务熟练程度打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A8_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A8_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A8" name="QuestionA8" type="radio" value="10" id="30_10"><label for="30_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A8" name="QuestionA8" type="radio" value="8" id="30_8"><label for="30_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A8" name="QuestionA8" type="radio" value="6" id="30_6"><label for="30_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A8" name="QuestionA8" type="radio" value="4" id="30_4"><label for="30_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A8" name="QuestionA8" type="radio" value="2" id="30_2"><label for="30_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A8a_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    在以下这些业务熟练程度具体的方面，你觉得小龙的客服人员符合哪一项呢？【单选】 
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A8a_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A8a_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A8a" name="QuestionA8a" type="radio" value="1" id="31_1"><label for="31_1">客服人员能较迅速的回答我的问题</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A8a" name="QuestionA8a" type="radio" value="2" id="31_2"><label for="31_2">客服人员需要多次查询才能回答我的问题</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A8a" name="QuestionA8a" type="radio" value="3" id="31_3"><label for="31_3">客服人员需要挂断后再次回拨来回答我的问题</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A8a" name="QuestionA8a" type="radio" value="4" id="31_4"><label for="31_4">客服人员无法回答我的问题</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+<div class="A8b_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section id="A8b_Text" style="box-sizing: border-box;">  
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A8b_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A8b_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A8b" id="A8b_Answer" name="QuestionA8b" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA8b()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA8b()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A9_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        那主人觉得自助语音的体验如何呢？也给打个分吧。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A9_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A9_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="A9" name="QuestionA9" type="radio" value="10" id="34_10"><label for="34_10">5分（非常满意）</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A9" name="QuestionA9" type="radio" value="8" id="34_8"><label for="34_8">4分 (满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A9" name="QuestionA9" type="radio" value="6" id="34_6"><label for="34_6">3分 (一般)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A9" name="QuestionA9" type="radio" value="4" id="34_4"><label for="34_4">2分(不满意)</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="A9" name="QuestionA9" type="radio" value="2" id="34_2"><label for="34_2">1分（非常不满意）</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="A9a_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        在以下这些自助语音具体的方面，您觉得怎么样呢？
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+	
+    <div class="A9a_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A9a_a_controls">
+                            <div class="bg">
+                                <section style="box-sizing: border-box;">
+                                    菜单项目的描述清晰、简洁
+                                </section>
+                                <p>
+                                    <input class="A9a_1" name="QuestionA9a_1" type="radio" value="1" id="35_1"><label for="35_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A9a_1" name="QuestionA9a_1" type="radio" value="2" id="35_2"><label for="35_2"><img src="false.png"/></label></input>   
+									&nbsp;&nbsp;
+                                    <input class="A9a_1" name="QuestionA9a_1" type="radio" value="99" id="35_3"><label for="35_3">无法评价</label></input>
+                                </p>
+                                <section style="box-sizing: border-box;">
+                                    菜单层级数量不多，我能快速找到需要办理的业务
+                                </section>
+                                <p>
+                                    <input class="A9a_2" name="QuestionA9a_2" type="radio" value="1" id="36_1"><label for="36_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A9a_2" name="QuestionA9a_2" type="radio" value="2" id="36_2"><label for="36_2"><img src="false.png"/></label></input>  
+									&nbsp;&nbsp;
+                                    <input class="A9a_2" name="QuestionA9a_2" type="radio" value="99" id="36_3"><label for="36_3">无法评价</label></input>
+                                </p>
+                                <section style="box-sizing: border-box;">
+                                    操作中输入的信息量合适，不会让我感到厌烦
+                                </section>
+                                <p>
+                                    <input class="A9a_3" name="QuestionA9a_3" type="radio" value="1" id="37_1"><label for="37_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A9a_3" name="QuestionA9a_3" type="radio" value="2" id="37_2"><label for="37_2"><img src="false.png"/></label></input> 
+									&nbsp;&nbsp;
+                                    <input class="A9a_3" name="QuestionA9a_3" type="radio" value="99" id="37_3"><label for="37_3">无法评价</label></input>
+                                </p>	
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>	
+
+<div class="A9a_2_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        那在以下方面，您觉得怎么样呢？
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+	
+    <div class="A9a_2_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A9a_2_a_controls">
+                            <div class="bg">
+                                <section style="box-sizing: border-box;">
+                                    每一级菜单项目数量合适，不会让我记不住
+                                </section>
+                                <p>
+                                    <input class="A9a_4" name="QuestionA9a_4" type="radio" value="1" id="38_1"><label for="38_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A9a_4" name="QuestionA9a_4" type="radio" value="2" id="38_2"><label for="38_2"><img src="false.png"/></label></input> 
+									&nbsp;&nbsp;
+                                    <input class="A9a_4" name="QuestionA9a_4" type="radio" value="99" id="38_3"><label for="38_3">无法评价</label></input>
+                                </p>
+                                <section style="box-sizing: border-box;">
+                                    能够一次性解决问题
+                                </section>
+                                <p>
+                                    <input class="A9a_5" name="QuestionA9a_5" type="radio" value="1" id="39_1"><label for="39_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A9a_5" name="QuestionA9a_5" type="radio" value="2" id="39_2"><label for="39_2"><img src="false.png"/></label></input> 
+									&nbsp;&nbsp;
+                                    <input class="A9a_5" name="QuestionA9a_5" type="radio" value="99" id="39_3"><label for="39_3">无法评价</label></input>
+                                </p>	
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>		
+	
+<div class="A10_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section  style="box-sizing: border-box;">
+                    使用自助语音还款过程中，主人更喜欢以下哪种方式呢？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A10_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A10_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A10" name="QuestionA10" type="radio" value="1" id="43_1"><label for="43_1">告知所有卡片的还款总金额</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A10" name="QuestionA10" type="radio" value="2" id="43_2"><label for="43_2">分不同卡片，根据输入的卡号分别告知还款金额</label></input>
+                            </p>						
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+	
+<div class="A11_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+			</section>
+		</section>
+		<section style="margin-left:10px; display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);" >
+				<section id="A11_Text" style="box-sizing: border-box;">
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A11_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="A11_a_controls">
+						<div class="bg">
+                            <p class="choice">
+                                <input class="A11" name="QuestionA11" type="radio" value="1" id="44_1"><label for="44_1">根据电话语音提示步骤自助操作</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A11" name="QuestionA11" type="radio" value="2" id="44_2"><label for="44_2">直接转入人工服务办理业务</label></input>
+                            </p>	
+                            <p class="choice">
+                                <input class="A11" name="QuestionA11" type="radio" value="3" id="44_3"><label for="44_3">先通过电话自助语音进行操作，操作失败后转接人工服务</label></input>
+                            </p>
+                            <p class="choice">
+                                <input class="A11" name="QuestionA11" type="radio" value="4" id="44_4"><label for="44_4">先通过电话自助语音进行操作，操作成功后再次转接人工服务</label></input>
+                            </p>							
+						</div>
+					</div>					
+				</section>					
+			</section> 
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+ 
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+<div class="A11a_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section id="A11a_Text" style="box-sizing: border-box;">  
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A11a_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A11a_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A11a" id="A11a_Answer" name="QuestionA11a" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA11a()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA11a()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+	
+<div class="B1_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        对本次办理的业务，主人为什么不使用微信、短信、手机银行等自助渠道完成呢？[请选择最符合当时情况的一项]
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    <div class="B1_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="B1_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="B1" name="QuestionB1" type="radio" value="1" id="40_1"><label for="40_1">我不知道此业务是否能通过自助渠道办理</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B1" name="QuestionB1" type="radio" value="2" id="40_2"><label for="40_2">我不知道可以通过哪个自助渠道办理此业务</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B1" name="QuestionB1" type="radio" value="3" id="40_3"><label for="40_3">我知道自助渠道可以办理此业务，但不太会操作 </label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B1" name="QuestionB1" type="radio" value="4" id="40_4"><label for="40_4">我知道如何通过自助渠道办理此业务，但是觉得过程很麻烦</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+<div class="B2_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        如果您所要办的业务可以在自助渠道办理，您是否能接受客服人员引导在自助渠道办理该业务？
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    <div class="B2_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="B2_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="B2" name="QuestionB2" type="radio" value="1" id="41_1"><label for="41_1">我能接受客服人员直接引导我在自助渠道办理本次业务</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B2" name="QuestionB2" type="radio" value="2" id="41_2"><label for="41_2">我希望客服人员办理完本次业务后再推荐相应自助渠道</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B2" name="QuestionB2" type="radio" value="3" id="41_3"><label for="41_3">我不愿接受任何自助渠道的引导和宣传</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>	
+
+
+<div class="B3_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+  
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        主人希望客服人员通过什么方式推荐自助渠道？  
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    <div class="B3_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style=" display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="B3_a_controls">
+                            <div class="bg">
+                                <p class="choice">
+                                    <input class="B3" name="QuestionB3" type="radio" value="1" id="42_1"><label for="42_1">客服人员在本次电话中或挂电话后，以短信形式告知您相应自助渠道和操作方法</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B3" name="QuestionB3" type="radio" value="2" id="42_2"><label for="42_2">客服人员在本次电话中口头告知微信软文关键字，您自己在微信订阅号“龙卡信用卡”中输入关键字查询</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B3" name="QuestionB3" type="radio" value="3" id="42_3"><label for="42_3">客服人员当通电话中或挂电话后，以短信形式告知软文关键字，您自己在微信订阅号中输入关键字查询</label></input>
+                                </p>
+                                <p class="choice">
+                                    <input class="B3" name="QuestionB3" type="radio" value="4" id="42_4"><label for="42_4">客服人员在本次电话中或挂电话后发送邮件，告知您相应自助渠道和操作方法</label></input>
+                                </p>								
+                            </div>
+                        </div>
+                    </section>
+                </section> 
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; box-sizing: border-box;">
+ 
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+	
+<div class="Topic00" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: white; 	box-sizing: border-box;">
+  
+                </section>
+            </section>
+
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: white; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                 <section style="  display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(104, 163, 206);">
+                    <section style="box-sizing: border-box;">
+                        终于完成了，感谢主人花时间给小龙分享宝贵建议，小龙会更努力的！
+                    </section>
+                </section>
+            </section>
+        </section>
+</div>
+
+<div class="Submission" style="text-align: center; Display: none ">
+<br/>
+<br/>
+<br/> 
+	<a class="large button yellow" style="vertical-align: middle; text-align: center; font-size:18px;" onclick = "Final_submit()">
+	<table>
+		<tr>
+			<th><img src="img/3q.gif" style="width: 35px; height: 35px; " alt="Photos" /></th>
+			<th>&nbsp;&nbsp;点&nbsp;&nbsp;&nbsp;击&nbsp;&nbsp;&nbsp;抽&nbsp;&nbsp;&nbsp;奖</th>
+		</tr>
+	</table>					
+	</a>
+<br/>
+<br/>
+<br/> 	
+</div>
+
+
+</body>
+</html>

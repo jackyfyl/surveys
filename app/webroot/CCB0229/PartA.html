@@ -1,0 +1,1827 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="jquery-1.11.3.min.js"></script>
+<style type="text/css">
+body {
+	background:#e6e6e6;
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+
+input, button { border:0; line-height:18px; font-size:18px }
+.btns { 
+width:243px; 
+height:40px; 
+color:#000000;
+background: rgb(188, 227, 249);
+padding: 0.5em 1em;
+border-radius: 12px;
+-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+-o-border-radius: 12px;
+
+}
+
+@-webkit-keyframes breathe {
+    0% { opacity: 1; box-shadow:0 1px 2px rgba(255,255,255,0.1);}
+    100% { opacity: 1; border:1px solid rgba(59,235,235,1); box-shadow:0 1px 30px rgba(59,255,255,1);}
+}
+
+.Time { 
+width:200px; 
+height:15px; 
+color:#FFFFFF;
+background: #B0B0B0;
+padding: 0.5em 1em;
+border-radius: 5px;
+font-size: 13px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-o-border-radius: 5px;
+}
+
+.choice{
+	border-bottom: 1px ;
+	padding-left: 0.5em;
+}
+.textwhite{
+	width: 80%;
+}
+#sub {width: 100%;
+	height: 2.5em;
+	line-height: 2.5em;
+	border-radius: 0.2em;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #2dbe60;
+	border: none;
+	margin: 1em 0;}
+span{
+	margin-left: 0.5em;
+	font-size: 12px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-top: 2px;
+	color:#666666;
+}
+.content{ padding: 0.8em;}
+.bg{
+	border: 1px;
+	border-bottom: none;
+}
+
+</style>
+	<style>
+
+	#dark{
+		background-color:#333;
+		border:1px solid #000;
+		padding:10px;
+		margin-top:20px;}
+		
+	#light{
+		background-color:#FFF;
+		border:1px solid #dedede;
+		padding:10px;
+		margin-top:20px;}	
+		
+	li{ 
+	list-style:none;
+		padding-top:10px;
+		padding-bottom:10px;}	
+
+	.button, .button:visited {
+		background: #222 url(overlay.png) repeat-x; 
+		display: inline-block; 
+		padding: 5px 10px 6px; 
+		color: #fff; 
+		text-decoration: none;
+		-moz-border-radius: 6px; 
+		-webkit-border-radius: 6px;
+		-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+		border-bottom: 1px solid rgba(0,0,0,0.25);
+		position: relative;
+		cursor: pointer
+	}
+	 
+		.button:hover							{ background-color: #111; color: #fff; }
+		.button:active							{ top: 1px; }
+		.small.button, .small.button:visited 			{ font-size: 11px}
+		.button, .button:visited,
+		.medium.button, .medium.button:visited 		{ font-size: 13px; 
+													  font-weight: bold; 
+													  line-height: 1; 
+													  text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
+													  }
+													  
+		.large.button, .large.button:visited 			{ font-size: 14px; 
+														  padding: 8px 14px 9px; }
+														  
+		.super.button, .super.button:visited 			{ font-size: 34px; 
+														  padding: 8px 14px 9px; }
+		
+		.pink.button, .magenta.button:visited		{ background-color: #e22092; }
+		.pink.button:hover							{ background-color: #c81e82; }
+		.green.button, .green.button:visited		{ background-color: #91bd09; }
+		.green.button:hover						    { background-color: #749a02; }
+		.red.button, .red.button:visited			{ background-color: #e62727; }
+		.red.button:hover							{ background-color: #cf2525; }
+		.orange.button, .orange.button:visited		{ background-color: #ff5c00; }
+		.orange.button:hover						{ background-color: #d45500; }
+		.blue.button, .blue.button:visited		    { background-color: #2981e4; }
+		.blue.button:hover							{ background-color: #2575cf; }
+		.yellow.button, .yellow.button:visited		{ background-color: #eeb515; }
+		.yellow.button:hover						{ background-color: #eeb515; }
+	</style> 
+<script type="text/javascript">
+
+var currentpos,timer; 
+
+var RecordID = 0;
+var rand = 0;
+
+var answerData = {};
+
+var CurrentIndex; 
+
+function getURLParameter(name) {
+	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}	
+
+function scrollwindow(index) 
+{
+	document.documentElement.scrollTop = index;
+    window.pageYOffset = index;
+	
+}
+
+function ScrollTo()
+{
+	var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+	
+	var index = $(document).height()-$(window).height();
+	
+	if (index != 0)
+	{
+		$("html, body").animate({ scrollTop: index });
+//		$("html, body").animate(scrollwindow(index));
+	}
+}
+
+
+function DisplayTopic(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+	ScrollTo();
+}
+
+function DisplayTopicWithoutScrol(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+}
+
+function CreateRecord(answerData)
+{
+	if (SID != 0 )
+	{
+		answerData['Survey']['userid']='本品A2016-1'; 
+		$.ajax({
+			type: "post",
+			url: "http://121.40.137.214/surveys/add.json",
+			data: answerData,
+			dataType: "json",
+			success: function (json) {
+				// send data success
+				RecordID = json["id"];
+				console.log(json);
+			},
+			error: function (err) {
+				console.error(err);
+			}
+
+		});	
+	}	
+}
+
+function EditRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});		
+}
+
+
+function onUserSelect(question, answer) {
+	
+	var result = answer; 
+// deliver to the server 
+	
+	if ( RecordID == 0 )
+		answerData['Survey'] = {};	
+			
+	var x; 
+	if (question < 10)
+		x = "q0";
+	else
+		x = "q";
+		
+	answerData['Survey'][x+ question.toString()] = result; 	
+
+	console.log(answerData);
+	
+	if ( RecordID == 0 )
+		CreateRecord(answerData);
+	else
+		EditRecord(answerData);
+		
+}
+
+function browserRedirect() {
+	var sUserAgent = navigator.userAgent.toLowerCase();
+	var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+	if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+		//alert("phone");
+	} else {
+		//alert("pc");
+	}
+}
+
+function onSuccess() {
+	var url="Finish.html";
+	window.location=encodeURI(encodeURI(url));
+}
+
+
+function submit_result()
+{
+   $.ajax({
+		type: "post",
+		url: "/surveys/edit/12.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			if(err.status === 200) {
+				console.error(err);
+			}
+			else
+			{
+				alert("提交失败，请检查您的网络设置");
+			}
+		}
+
+	});	
+}
+
+function FinishRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+/*	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			window.location.href='Finish.html';	
+		},
+		error: function (err) {
+			console.error(err);
+			alert("提交失败，请检查您的网络设置");
+		}
+
+	});	*/
+}
+
+function Final_submit()
+{
+	window.location.href='Finish.html';
+}
+
+
+function OKforA1a1()
+{
+	var answer1 = document.getElementById("A1a_1").value;
+	var answer2 = document.getElementById("A1a_2").value;
+	var answer3 = document.getElementById("A1a_3").value;
+	var answer4 = document.getElementById("A1a_4").value;
+	var answer5 = document.getElementById("A1a_5").value;
+	var answer6 = document.getElementById("A1a_6").value;
+	var answer7 = document.getElementById("A1a_7").value;
+	var answer8 = document.getElementById("A1a_8").value;	
+	
+	if ( answer1 != 0 && answer2 != 0 && answer3 != 0 && answer4 != 0
+	  && answer5 != 0 && answer6 != 0 && answer7 != 0 && answer8 != 0 )
+	{
+		onUserSelect(2, answer1 );	
+		onUserSelect(3, answer2 );	
+		onUserSelect(4, answer3 );	
+		onUserSelect(5, answer4 );	
+		onUserSelect(6, answer5 );	
+		onUserSelect(7, answer6 );	
+		onUserSelect(8, answer7 );	
+		onUserSelect(9, answer8 );		
+		
+		setTimeout("DisplayTopic('.A1a2_q')", 1000 );
+		setTimeout("DisplayTopic('.A1a2_a')", 1000);
+	}
+	else
+	{
+		alert("请选择您的答案！");
+	}
+}
+
+function OKforA1a2()
+{
+	var answer1 = document.getElementById("A1a_9").value;
+	var answer2 = document.getElementById("A1a_10").value;
+	var answer3 = document.getElementById("A1a_11").value;
+	var answer4 = document.getElementById("A1a_12").value;
+	var answer5 = document.getElementById("A1a_13").value;
+	var answer6 = document.getElementById("A1a_14").value;
+	var answer7 = document.getElementById("A1a_15").value;
+	var answer8 = document.getElementById("A1a_16").value;
+	var answer9 = document.getElementById("A1a_17").value;	
+
+	if ( answer1 != 0 && answer2 != 0 && answer3 != 0 && answer4 != 0
+	  && answer5 != 0 && answer6 != 0 && answer7 != 0 && answer8 != 0 && answer9 != 0)
+	{	  
+		onUserSelect(10, answer1 );	
+		onUserSelect(11, answer2 );	
+		onUserSelect(12, answer3 );	
+		onUserSelect(13, answer4 );	
+		onUserSelect(14, answer5 );	
+		onUserSelect(15, answer6 );	
+		onUserSelect(16, answer7 );	
+		onUserSelect(17, answer8 );		
+		onUserSelect(18, answer9 );			
+		
+		setTimeout("DisplayTopic('.A1b_q')", 1000 );
+		setTimeout("DisplayTopic('.A1b_a')", 1000);
+	}
+	else
+	{
+		alert("请选择您的答案！");
+	}	
+}
+
+function OKforA1b()
+{
+	var answer1 = document.getElementById("A1b_1").value;	
+	
+	if (answer1 != 0 )
+	{
+		onUserSelect(19, answer1 );	
+		
+		setTimeout("DisplayTopic('.A2_q')", 1000 );
+		setTimeout("DisplayTopic('.A2_a')", 1000);
+	}	
+	else
+	{
+		alert("请选择您的答案！");
+	}		
+}
+
+
+function OKforA22_2()
+{
+	var answer = $('input[name="QuestionA22_2"]:checked').val();
+	
+	if ( answer!= undefined)
+	{
+		if (answer == 97)
+		{
+			var value = document.getElementById("A22_2_other").value;
+			onUserSelect(24, value );		
+		}
+
+		onUserSelect(23, answer);	
+		
+		setTimeout("DisplayTopic('.A23_1_q')", 1000 );
+		setTimeout("DisplayTopic('.A23_1_a')", 1000);
+	}	
+}
+
+function OKforA23_2()
+{
+	var answer = $('input[name="QuestionA23_2"]:checked').val();
+
+	if ( answer!= undefined)
+	{	
+		if (answer == 97)
+		{
+			var value = document.getElementById("A23_2_other").value;
+			onUserSelect(26, value );		
+		}
+		
+		onUserSelect(25, answer);	
+		
+		setTimeout("DisplayTopic('.A7_1_q')", 1000 );
+		setTimeout("DisplayTopic('.A7_1_a')", 1000);
+	}	
+}
+
+function OKforA7_2()
+{
+	var bNext = false; 
+
+	var checks = document.getElementsByName("QuestionA7_1");
+
+	for(i=0;i<checks.length-1;i++){
+		if(checks[i].checked)
+		{
+			if (i == 0)
+				answerA7 = "1";
+			else
+				answerA7 = answerA7 + "1";
+			bNext = true;	
+		}
+		else
+		{
+			if (i == 0)
+				answerA7 = "0";
+			else
+				answerA7 = answerA7 + "0";				
+		}
+	}	
+	
+	checks = document.getElementsByName("QuestionA7_2");
+
+	for(i=0;i<checks.length;i++){
+		if(checks[i].checked)
+		{
+			answerA7 = answerA7 + "1";
+			bNext = true; 
+		}
+		else
+		{
+			answerA7 = answerA7 + "0";				
+		}
+	}		
+	
+	if ( bNext == true )
+	{
+		onUserSelect(27, answerA7 );
+		Final_Call();
+	}
+	else
+	{
+		alert("请选择您的答案");
+	}
+}
+
+var rand = 0;
+
+var SID;
+var UserID;
+var NM;	
+
+function Final_Call()
+{
+	
+	answerData['Survey']["q48"] = 1; 	
+
+	console.log(answerData);
+	
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			Final_jump();
+		},
+		error: function (err) {
+			console.error(err);
+			Final_jump();
+		}
+
+	});	
+
+}
+
+
+function Final_jump()
+{
+
+	if ( NM != "N")	
+		window.location.href='Part'+ NM +'.html?SID='+ SID +'&UserID='+UserID + '&NM=' + NM ;
+	else
+		window.location.href='PartM.html?SID='+ SID +'&UserID='+UserID + '&NM=' + NM ;
+}
+
+$(function(){ 
+
+	browserRedirect();
+
+	SID = decodeURI(getURLParameter("SID"));
+	UserID = decodeURI(getURLParameter("UserID"));
+	NM = decodeURI(getURLParameter("NM"));	
+	
+	onUserSelect(1, UserID);
+	
+    $(".Time").text("信用卡整体满意度");
+	$(".Time").fadeIn(200);
+	setTimeout("DisplayTopic('.A1a1_q')", 0 );
+	setTimeout("DisplayTopic('.A1a1_a')", 1000 );
+	
+
+	$(".A2").click(function(){
+		var answer = $('input[name="QuestionA2"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			if($(".A3_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3_q')", 1000 );
+				setTimeout("DisplayTopic('.A3_a')", 1000);
+			}	
+		}
+		onUserSelect(20, answer );		
+		
+	});		
+	
+	$(".A2").click(function(){
+		var answer = $('input[name="QuestionA2"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			if($(".A3_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3_q')", 1000 );
+				setTimeout("DisplayTopic('.A3_a')", 1000);
+			}	
+		}
+		onUserSelect(20, answer );		
+		
+	});		
+
+	$(".A3").click(function(){
+		var answer = $('input[name="QuestionA3"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			if($(".A4_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A4_q')", 1000 );
+				setTimeout("DisplayTopic('.A4_a')", 1000);
+			}	
+		}
+		onUserSelect(21, answer );		
+		
+	});		
+	
+	$(".A4").click(function(){
+		var answer = $('input[name="QuestionA4"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			if($(".A22_1_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A22_1_q')", 1000 );
+				setTimeout("DisplayTopic('.A22_1_a')", 1000);
+			}	
+		}
+		onUserSelect(22, answer );		
+		
+	});		
+
+	$(".A22_1").click(function(){
+		var answer = $('input[name="QuestionA22_1"]:checked').val();
+		
+		if ( answer != 0 )
+		{	
+			if ( answer != 100 )
+			{
+				if($(".A23_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.A23_1_q')", 1000 );
+					setTimeout("DisplayTopic('.A23_1_a')", 1000);
+				}	
+				onUserSelect(23, answer );	
+			}
+			else
+			{
+				if($(".A22_2_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.A22_2_q')", 1000 );
+					setTimeout("DisplayTopic('.A22_2_a')", 1000);
+				}	
+			}
+		}	
+		
+	});		
+	
+	$(".A23_1").click(function(){
+		var answer = $('input[name="QuestionA23_1"]:checked').val();
+		
+		if ( answer != 0 )
+		{	
+			if ( answer != 100 )
+			{
+				if($(".A7_1_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.A7_1_q')", 1000 );
+					setTimeout("DisplayTopic('.A7_1_a')", 1000);
+				}	
+				onUserSelect(25, answer );	
+			}
+			else
+			{
+				if($(".A23_2_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.A23_2_q')", 1000 );
+					setTimeout("DisplayTopic('.A23_2_a')", 1000);
+				}	
+			}
+		}	
+		
+	});		
+	
+	var answerA7 ="";	
+	
+	$(".A7_1").click(function(){
+	
+		if($(".A7_2_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A7_2_q')", 1000 );
+			setTimeout("DisplayTopic('.A7_2_a')", 1000);
+		}	
+		
+	});	
+	
+////	
+	
+//	setTimeout("DisplayTopic('.Submission')", 1000);
+
+});
+</script>
+
+</head>
+<body style="background-image: url(ccb-bg.jpg);">
+<br/>
+
+<div style="text-align: center">
+<div class="Time" style="text-align: center; margin-left:auto; margin-right:auto; Display: none"></div>
+</div>
+
+
+<div class="A1a1_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    以下是一些建行信用卡服务环节，综合考虑您使用建行信用卡的经历，请问您对建行信用卡各个环节的服务作何评价？
+					<br>
+					<br>					
+					请用1-10分的满意程度来评价，10分表示“非常满意”，1分表示“非常不满意”。
+					<br>
+					<br>					
+					您可以用1-10分中的任何一个分数来表达您的看法。
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A1a1_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<table cellspacing="0" class="matrix-rating">
+								<colgroup>
+									<col width="60%">
+									<col width="40%">
+								</colgroup>
+								<tbody>
+									<tr class="trlabel">
+										<th>申请便捷性</th>
+										<th>
+											<select id="A1a_1" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>办卡时长</th>
+										<th>
+											<select id="A1a_2" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>卡片寄送</th>
+										<th>
+											<select id="A1a_3" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>卡片激活</th>
+										<th>
+											<select id="A1a_4" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>产品设计和权益</th>
+										<th>
+											<select id="A1a_5" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>支付</th>
+										<th>
+											<select id="A1a_6" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>账务查询</th>
+										<th>
+											<select id="A1a_7" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>	
+									<tr class="trlabel">
+										<th>还款</th>
+										<th>
+											<select id="A1a_8" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>									
+								</tbody>
+							</table>						
+						</p>	
+
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA1a1()">确 认</a>	
+						</div>													
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A1a2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    那对以下这些环节的评价呢？
+					<br>
+					<br>					
+					请用1-10分的满意程度来评价，10分表示“非常满意”，1分表示“非常不满意”。
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A1a2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<table cellspacing="0" class="matrix-rating">
+								<colgroup>
+									<col width="60%">
+									<col width="40%">
+								</colgroup>
+								<tbody>
+									<tr class="trlabel">
+										<th>分期付款</th>
+										<th>
+											<select id="A1a_9" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>额度查询与调整</th>
+										<th>
+											<select id="A1a_10" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>积分查询与兑换</th>
+										<th>
+											<select id="A1a_11" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>营销活动</th>
+										<th>
+											<select id="A1a_12" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>投诉处理</th>
+										<th>
+											<select id="A1a_13" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>用卡安全</th>
+										<th>
+											<select id="A1a_14" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>办理渠道(如柜面、电话客服 、网银等)</th>
+										<th>
+											<select id="A1a_15" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>	
+									<tr class="trlabel">
+										<th>信用卡知识普及(如免息期、账单日等)</th>
+										<th>
+											<select id="A1a_16" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+									<tr class="trlabel">
+										<th>对客户关怀和关心</th>
+										<th>
+											<select id="A1a_17" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>									
+								</tbody>
+							</table>						
+						</p>	
+
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA1a2()">确 认</a>	
+						</div>													
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A1b_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    综合考虑您使用建行信用卡的经历，请问您对建行信用卡的整体体验作何评价？
+					<br>
+					<br>					
+					您可以用1-10分中的任何一个分数来表达您的看法。请问您打几分？
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A1b_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<table cellspacing="0" class="matrix-rating">
+								<colgroup>
+									<col width="100%">
+								</colgroup>
+								<tbody>
+									<tr class="trlabel">
+										<th>请用1-10分的满意程度来评价，10分表示“非常满意”，1分表示“非常不满意”。</th>
+									</tr>
+									<tr class="trlabel">
+										<th>&nbsp;&nbsp;</th>
+									</tr>									
+									<tr class="trlabel">
+										<th>
+											<select id="A1b_1" runat="server" style=" width:100%;">
+													<option value="0">请选择</option>											
+													<option value="1">1(非常不满意)</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10（非常满意）</option>
+													<option value="99">无法评价</option>
+											</select>										
+										</th>
+									</tr>
+								</tbody>
+							</table>						
+						</p>	
+
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA1b()">确 认</a>	
+						</div>													
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    如果有机会，您会向其他人推荐建行信用卡吗？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A2" name="QuestionA2" type="radio" value="5" id="A2_1"><label for="A2_1">肯定会推荐</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A2" name="QuestionA2" type="radio" value="4" id="A2_2"><label for="A2_2">可能会推荐</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A2" name="QuestionA2" type="radio" value="3" id="A2_3"><label for="A2_3">不太确定</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A2" name="QuestionA2" type="radio" value="2" id="A2_4"><label for="A2_4">可能不会推荐</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A2" name="QuestionA2" type="radio" value="1" id="A2_5"><label for="A2_5">肯定不会推荐</label></input>
+						</p>												
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A3_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    未来您会继续使用建行信用卡吗？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A3_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A3" name="QuestionA3" type="radio" value="5" id="A3_1"><label for="A3_1">肯定会使用</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A3" name="QuestionA3" type="radio" value="4" id="A3_2"><label for="A3_2">可能会使用</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A3" name="QuestionA3" type="radio" value="3" id="A3_3"><label for="A3_3">不太确定</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A3" name="QuestionA3" type="radio" value="2" id="A3_4"><label for="A3_4">可能不会使用</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A3" name="QuestionA3" type="radio" value="1" id="A3_5"><label for="A3_5">肯定不会使用</label></input>
+						</p>												
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A4_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您认为未来您与建行的关系会如何变化？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A4_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A4" name="QuestionA4" type="radio" value="5" id="A4_1"><label for="A4_1">与这个品牌的关系会亲近许多</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A4" name="QuestionA4" type="radio" value="4" id="A4_2"><label for="A4_2">与这个品牌的关系会亲近一些</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A4" name="QuestionA4" type="radio" value="3" id="A4_3"><label for="A4_3">与这个品牌的关系不会有什么变化</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A4" name="QuestionA4" type="radio" value="2" id="A4_4"><label for="A4_4">与这个品牌的关系会疏远一些</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A4" name="QuestionA4" type="radio" value="1" id="A4_5"><label for="A4_5">与这个品牌的关系会疏远许多</label></input>
+						</p>												
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A22_1_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您最常用的建行卡是什么卡种？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A22_1_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="1" id="A22_1_1"><label for="A22_1_1">标准卡无主题</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="2" id="A22_1_2"><label for="A22_1_2">购物卡</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="3" id="A22_1_3"><label for="A22_1_3">商旅航空卡</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="4" id="A22_1_4"><label for="A22_1_4">时尚主题卡（变形金刚、中国好声音等）</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="5" id="A22_1_5"><label for="A22_1_5">车相关（如车主卡，ETC卡等）</label></input>
+						</p>
+						<p class="choice">	
+							<input class = "A22_1" name="QuestionA22_1" type="radio" value="100" id="A22_1_100"><label for="A22_1_100">以上都不是</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A22_2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    那是以下卡种吗?【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A22_2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A22_2" name="QuestionA22_2" type="radio" value="6" id="A22_2_6"><label for="A22_2_6">联名卡</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A22_2" name="QuestionA22_2" type="radio" value="7" id="A22_2_7"><label for="A22_2_7">高端商务卡</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A22_2" name="QuestionA22_2" type="radio" value="8" id="A22_2_8"><label for="A22_2_8">旅行相关（如日本旅行卡、韩国旅行卡等）</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A22_2" name="QuestionA22_2" type="radio" value="99" id="A22_2_99"><label for="A22_2_99">不知道</label></input>
+						</p>																															
+						<p class="choice">	
+							<input class = "A22_2" name="QuestionA22_2" type="radio" value="97" id="A22_2_97"><label for="A22_2_97">其他</label></input>
+							<input class = "A22_2" name="QuestionA22_2" type="text" id="A22_2_other" style="width:100px;font-size: 0.9em" placeholder="请注明"></input>
+						</p>	
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA22_2()">确 认</a>	
+						</div>													
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A23_1_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您办理并使用建行信用卡的最主要原因是什么？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A23_1_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A23_1" name="QuestionA23_1" type="radio" value="1" id="A23_1_1"><label for="A23_1_1">为了境外旅游支付方便</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A23_1" name="QuestionA23_1" type="radio" value="2" id="A23_1_2"><label for="A23_1_2">在经常去买东西的商场消费有专属活动或积分奖励</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A23_1" name="QuestionA23_1" type="radio" value="3" id="A23_1_3"><label for="A23_1_3">网上购物有专属优惠</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A23_1" name="QuestionA23_1" type="radio" value="4" id="A23_1_4"><label for="A23_1_4">为了海淘方便</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A23_1" name="QuestionA23_1" type="radio" value="100" id="A23_1_100"><label for="A23_1_100">以上都不是</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A23_2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    那是以下原因吗？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A23_2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A23_2" name="QuestionA23_2" type="radio" value="5" id="A23_2_5"><label for="A23_2_5">经常出差，和航空公司有积分共享</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A23_2" name="QuestionA23_2" type="radio" value="6" id="A23_2_6"><label for="A23_2_6">与自己的公司、学校有联名卡留作纪念</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A23_2" name="QuestionA23_2" type="radio" value="7" id="A23_2_7"><label for="A23_2_7">卡面是我喜欢的主题</label></input>
+						</p>																									
+						<p class="choice">	
+							<input class = "A23_2" name="QuestionA23_2" type="radio" value="8" id="A23_2_8"><label for="A23_2_8">日常消费使用，没有特别用途</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A23_2" name="QuestionA23_2" type="radio" value="97" id="A23_2_97"><label for="A23_2_97">其他</label></input>
+							<input class = "A23_2" name="QuestionA23_2" type="text" style="width:100px;font-size: 0.9em" placeholder="请注明"></input>
+						</p>	
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA23_2()">确 认</a>	
+						</div>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A7_1_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    您会在以下哪些场景中使用建行信用卡？【可多选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A7_1_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="1" id="A7_1_1"><label for="A7_1_1">日常网络消费</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="2" id="A7_1_2"><label for="A7_1_2">日常餐饮消费</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="3" id="A7_1_3"><label for="A7_1_3">日常休闲娱乐消费（如电影、演出、SPA/KTV、健身）</label></input>
+						</p>												
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="4" id="A7_1_4"><label for="A7_1_4">线下大额消费（如家电、电子产品等）</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="5" id="A7_1_5"><label for="A7_1_5">日常小额购物</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="6" id="A7_1_6"><label for="A7_1_6">生意进货采购</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="7" id="A7_1_7"><label for="A7_1_7">支付水电煤等公共事业费用</label></input>
+						</p>																								
+						<p class="choice">	
+							<input class = "A7_1" name="QuestionA7_1" type="checkbox" value="100" id="A7_1_100"><label for="A7_1_100">以上都不是</label></input>
+						</p>																								
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="A7_2_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    那在以下场景呢？【可多选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="A7_2_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="8" id="A7_2_8"><label for="A7_2_8">支付保险等服务费用</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="9" id="A7_2_9"><label for="A7_2_9">国内旅游消费</label></input>
+						</p>							
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="10" id="A7_2_10"><label for="A7_2_10">国外旅游消费</label></input>
+						</p>												
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="11" id="A7_2_11"><label for="A7_2_11">商务出行（酒店、航空）</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="12" id="A7_2_12"><label for="A7_2_12">汽车相关费用（加油、洗车及交纳罚款等）</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="13" id="A7_2_13"><label for="A7_2_13">海淘</label></input>
+						</p>																		
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="14" id="A7_2_14"><label for="A7_2_14">教育类支出</label></input>
+						</p>																								
+						<p class="choice">	
+							<input class = "A7_2" name="QuestionA7_2" type="checkbox" value="15" id="A7_2_15"><label for="A7_2_15">医疗类支出</label></input>
+						</p>
+
+						<div style="text-align: center;">
+							<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA7_2()">确 认</a>	
+						</div>							
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+
+	
+<div class="Topic00" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        小龙
+                    </section>
+                </section>
+            </section>
+
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                <img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);">
+                    <section style="box-sizing: border-box;">
+                        终于完成了，感谢主人花时间给小龙分享宝贵建议，小龙会更努力的！
+                    </section>
+                </section>
+            </section>
+        </section>
+</div>
+
+<div class="Submission" style="text-align: center; Display: none ">
+<br/>
+<br/>
+<br/> 
+	<a class="large button yellow" style="vertical-align: middle; text-align: center; font-size:18px;" onclick = "Final_submit()">
+	<table>
+		<tr>
+			<th><img src="img/3q.gif" style="width: 35px; height: 35px; " alt="Photos" /></th>
+			<th>&nbsp;&nbsp;点&nbsp;&nbsp;&nbsp;击&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;&nbsp;交</th>
+		</tr>
+	</table>					
+	</a>
+<br/>
+<br/>
+<br/> 	
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,725 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="jquery-1.11.3.min.js"></script>
+<style type="text/css">
+body {
+	background:#e6e6e6;
+    -webkit-font-smoothing: antialiased;
+	font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+}
+
+input, button { border:0; line-height:18px; font-size:18px }
+.btns { 
+width:243px; 
+height:40px; 
+color:#000000;
+background: rgb(188, 227, 249);
+padding: 0.5em 1em;
+border-radius: 12px;
+-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+-o-border-radius: 12px;
+
+}
+
+@-webkit-keyframes breathe {
+    0% { opacity: 1; box-shadow:0 1px 2px rgba(255,255,255,0.1);}
+    100% { opacity: 1; border:1px solid rgba(59,235,235,1); box-shadow:0 1px 30px rgba(59,255,255,1);}
+}
+
+.Time { 
+width:50%; 
+height:15px; 
+color:#FFFFFF;
+background: #B0B0B0;
+padding: 0.5em 1em;
+border-radius: 5px;
+font-size: 13px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-o-border-radius: 5px;
+}
+
+.choice{
+	border-bottom: 1px ;
+	padding-left: 0.5em;
+}
+.textwhite{
+	width: 80%;
+}
+#sub {width: 100%;
+	height: 2.5em;
+	line-height: 2.5em;
+	border-radius: 0.2em;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #2dbe60;
+	border: none;
+	margin: 1em 0;}
+span{
+	margin-left: 0.5em;
+	font-size: 12px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-top: 2px;
+	color:#666666;
+}
+.content{ padding: 0.8em;}
+.bg{
+	border: 1px;
+	border-bottom: none;
+}
+
+</style>
+	<style>
+
+	#dark{
+		background-color:#333;
+		border:1px solid #000;
+		padding:10px;
+		margin-top:20px;}
+		
+	#light{
+		background-color:#FFF;
+		border:1px solid #dedede;
+		padding:10px;
+		margin-top:20px;}	
+		
+	li{ 
+	list-style:none;
+		padding-top:10px;
+		padding-bottom:10px;}	
+
+	.button, .button:visited {
+		background: #222 url(overlay.png) repeat-x; 
+		display: inline-block; 
+		padding: 5px 10px 6px; 
+		color: #fff; 
+		text-decoration: none;
+		-moz-border-radius: 6px; 
+		-webkit-border-radius: 6px;
+		-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+		text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+		border-bottom: 1px solid rgba(0,0,0,0.25);
+		position: relative;
+		cursor: pointer
+	}
+	 
+		.button:hover							{ background-color: #111; color: #fff; }
+		.button:active							{ top: 1px; }
+		.small.button, .small.button:visited 			{ font-size: 11px}
+		.button, .button:visited,
+		.medium.button, .medium.button:visited 		{ font-size: 13px; 
+													  font-weight: bold; 
+													  line-height: 1; 
+													  text-shadow: 0 -1px 1px rgba(0,0,0,0.25); 
+													  }
+													  
+		.large.button, .large.button:visited 			{ font-size: 14px; 
+														  padding: 8px 14px 9px; }
+														  
+		.super.button, .super.button:visited 			{ font-size: 34px; 
+														  padding: 8px 14px 9px; }
+		
+		.pink.button, .magenta.button:visited		{ background-color: #e22092; }
+		.pink.button:hover							{ background-color: #c81e82; }
+		.green.button, .green.button:visited		{ background-color: #91bd09; }
+		.green.button:hover						    { background-color: #749a02; }
+		.red.button, .red.button:visited			{ background-color: #e62727; }
+		.red.button:hover							{ background-color: #cf2525; }
+		.orange.button, .orange.button:visited		{ background-color: #ff5c00; }
+		.orange.button:hover						{ background-color: #d45500; }
+		.blue.button, .blue.button:visited		    { background-color: #2981e4; }
+		.blue.button:hover							{ background-color: #2575cf; }
+		.yellow.button, .yellow.button:visited		{ background-color: #eeb515; }
+		.yellow.button:hover						{ background-color: #eeb515; }
+	</style> 
+<script type="text/javascript">
+
+var currentpos,timer; 
+
+var RecordID = 0;
+var rand = 0;
+
+var answerData = {};
+
+var CurrentIndex; 
+
+function scrollwindow(index) 
+{
+	document.documentElement.scrollTop = index;
+    window.pageYOffset = index;
+	
+}
+
+function ScrollTo()
+{
+	var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+	
+	var index = $(document).height()-$(window).height();
+	
+	if (index != 0)
+	{
+		$("html, body").animate({ scrollTop: index });
+//		$("html, body").animate(scrollwindow(index));
+	}
+}
+
+
+function DisplayTopic(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+	ScrollTo();
+}
+
+function DisplayTopicWithoutScrol(strMsg)
+{
+	$(strMsg).fadeIn(200);	
+}
+
+function CreateRecord(answerData)
+{
+	answerData['Survey']['userid']='400客服热线满意度问卷_2'; 
+	$.ajax({
+		type: "post",
+		url: "http://121.40.137.214/surveys/add.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			RecordID = json["id"];
+			console.log(json);
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});	
+}
+
+function EditRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});		
+}
+
+
+function onUserSelect(question, answer) {
+	
+	var result = answer; 
+// deliver to the server 
+	
+	if ( RecordID == 0 )
+		answerData['Survey'] = {};	
+			
+	var x; 
+	if (question < 10)
+		x = "q0";
+	else
+		x = "q";
+		
+	answerData['Survey'][x+ question.toString()] = result; 	
+
+	console.log(answerData);
+	
+//	if ( RecordID == 0 )
+//		CreateRecord(answerData);
+//	else
+//		EditRecord(answerData);
+}
+
+function browserRedirect() {
+	var sUserAgent = navigator.userAgent.toLowerCase();
+	var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+	if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+		//alert("phone");
+	} else {
+		//alert("pc");
+	}
+}
+
+function onSuccess() {
+	var url="Finish.html";
+	window.location=encodeURI(encodeURI(url));
+}
+
+
+function submit_result()
+{
+   $.ajax({
+		type: "post",
+		url: "/surveys/edit/12.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+		},
+		error: function (err) {
+			if(err.status === 200) {
+				console.error(err);
+			}
+			else
+			{
+				alert("提交失败，请检查您的网络设置");
+			}
+		}
+
+	});	
+}
+
+function FinishRecord(answerData)
+{
+	var temp = "http://121.40.137.214/surveys/edit/"+ RecordID +".json";
+/*	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			window.location.href='Finish.html';	
+		},
+		error: function (err) {
+			console.error(err);
+			alert("提交失败，请检查您的网络设置");
+		}
+
+	});	*/
+}
+
+function Final_submit()
+{
+	window.location.href='Finish.html';
+}
+
+
+var rand = 0;
+
+function Final_Call()
+{
+	alert("OK");
+}
+
+$(function(){ 
+
+	browserRedirect();
+	
+
+    $(".Time").text("背景信息");
+	$(".Time").fadeIn(200);
+	setTimeout("DisplayTopic('.Z7_q')", 0 );
+	setTimeout("DisplayTopic('.Z7_a')", 1000 );
+	
+	$(".Z7").click(function(){
+	
+		var answer = $('input[name="QuestionZ7"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			setTimeout("DisplayTopic('.Z8_q')", 1000 );
+			setTimeout("DisplayTopic('.Z8_a')", 1000 );
+		}
+		onUserSelect(2, answer );		
+		
+	});		
+	
+	$(".Z8").click(function(){
+	
+		var answer = $('input[name="QuestionZ8"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			setTimeout("DisplayTopic('.Z9_q')", 1000 );
+			setTimeout("DisplayTopic('.Z9_a')", 1000 );
+		}
+		onUserSelect(3, answer );		
+		
+	});			
+
+	$(".Z9").click(function(){
+	
+		var answer = $('input[name="QuestionZ9"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			setTimeout("DisplayTopic('.Z10_q')", 1000 );
+			setTimeout("DisplayTopic('.Z10_a')", 1000 );
+		}
+		onUserSelect(4, answer );		
+		
+	});	
+	
+	$(".Z10").click(function(){
+	
+		var answer = $('input[name="QuestionZ10"]:checked').val();
+		
+		if ( answer != 0)
+		{
+			if ( answer == 1)
+			{
+				setTimeout("DisplayTopic('.Z11_q')", 1000 );
+				setTimeout("DisplayTopic('.Z11_a')", 1000 );
+			}
+			else 
+				Final_Call();
+		}
+		onUserSelect(5, answer );		
+		
+	});		
+	
+	$(".Z11").click(function(){
+	
+		var answer = $('input[name="QuestionZ11"]:checked').val();
+		
+		onUserSelect(6, answer );		
+		
+		Final_Call();
+	});			
+	
+//	setTimeout("DisplayTopic('.Submission')", 1000);
+
+});
+</script>
+
+</head>
+<body style="background-image: url(ccb-bg.jpg);">
+<br/>
+
+<div style="text-align: center">
+<div class="Time" style="text-align: center; margin-left:auto; margin-right:auto; Display: none"></div>
+</div>
+
+<div class="Z7_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您的最高学历是？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Z7_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="1" id="Z7_1"><label for="Z7_1">硕士/博士</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="2" id="Z7_2"><label for="Z7_2">大学</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="3" id="Z7_3"><label for="Z7_3">大专</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="4" id="Z7_4"><label for="Z7_4">中专或高中</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="5" id="Z7_5"><label for="Z7_5">中学</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="6" id="Z7_6"><label for="Z7_6">小学或更低</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z7" name="QuestionZ7" type="radio" value="99" id="Z7_99"><label for="Z7_99">拒绝回答</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="Z8_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    是否有车？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Z8_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "Z8" name="QuestionZ8" type="radio" value="1" id="Z8_1"><label for="Z8_1">有</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z8" name="QuestionZ8" type="radio" value="2" id="Z8_2"><label for="Z8_2">没有</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="Z9_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    您目前所处的地区属于_____?【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Z9_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "Z9" name="QuestionZ9" type="radio" value="1" id="Z9_1"><label for="Z9_1">城区</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z9" name="QuestionZ9" type="radio" value="2" id="Z9_2"><label for="Z9_2">城镇郊区（包括城乡结合处）</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z9" name="QuestionZ9" type="radio" value="3" id="Z9_3"><label for="Z9_3">农村</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="Z10_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您目前的婚姻状况？【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Z10_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "Z10" name="QuestionZ10" type="radio" value="1" id="Z10_1"><label for="Z10_1">已婚</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z10" name="QuestionZ10" type="radio" value="2" id="Z10_2"><label for="Z10_2">未婚</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z10" name="QuestionZ10" type="radio" value="3" id="Z10_3"><label for="Z10_3">其他</label></input>
+						</p>						
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+
+<div class="Z11_q" style="Display: none">	
+	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" >
+			</section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					小龙
+				</section>
+			</section>
+		</section>
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
+			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
+				<section  style="box-sizing: border-box;">
+                    请问您是否有孩子?【单选】
+				</section>
+			</section>
+		</section>
+	</section>
+</div>
+
+<div class="Z11_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+						<p class="choice">	
+							<input class = "Z11" name="QuestionZ11" type="radio" value="1" id="Z11_1"><label for="Z11_1">是</label></input>
+						</p>	
+						<p class="choice">	
+							<input class = "Z11" name="QuestionZ11" type="radio" value="2" id="Z11_2"><label for="Z11_2">否</label></input>
+						</p>							
+					</div>					
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>
+	
+<div class="Topic00" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        小龙
+                    </section>
+                </section>
+            </section>
+
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                <img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);">
+                    <section style="box-sizing: border-box;">
+                        终于完成了，感谢主人花时间给小龙分享宝贵建议，小龙会更努力的！
+                    </section>
+                </section>
+            </section>
+        </section>
+</div>
+
+<div class="Submission" style="text-align: center; Display: none ">
+<br/>
+<br/>
+<br/> 
+	<a class="large button yellow" style="vertical-align: middle; text-align: center; font-size:18px;" onclick = "Final_submit()">
+	<table>
+		<tr>
+			<th><img src="img/3q.gif" style="width: 35px; height: 35px; " alt="Photos" /></th>
+			<th>&nbsp;&nbsp;点&nbsp;&nbsp;&nbsp;击&nbsp;&nbsp;&nbsp;提&nbsp;&nbsp;&nbsp;交</th>
+		</tr>
+	</table>					
+	</a>
+<br/>
+<br/>
+<br/> 	
+</div>
+
+
+</body>
+</html>

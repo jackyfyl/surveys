@@ -95,7 +95,7 @@ span{
 		padding-bottom:10px;}	
 
 	.button, .button:visited {
-		background: #222 url(overlay.png) repeat-x; 
+		background: #222 repeat-x; 
 		display: inline-block; 
 		padding: 5px 10px 6px; 
 		color: #fff; 
@@ -143,12 +143,11 @@ span{
 
 var currentpos,timer; 
 
+var bPhone = 1; 
 var RecordID = 0;
 var rand = 0;
 
 var answerData = {};
-
-var bInvalid = 1;
 
 function scrollwindow(index) 
 {
@@ -182,9 +181,11 @@ function DisplayTopicWithoutScrol(strMsg)
 	$(strMsg).fadeIn(200);	
 }
 
-function CreateRecord(answerData)
+var bInvalid = 0; 
+
+function CreateRecord_Phone(answerData)
 {
-	answerData['Survey']['userid']='400客服热线满意度问卷_Feb_2'; 
+	answerData['Survey']['userid']='400客服热线满意度问卷_Apr'; 
 	var time1 = new Date();
 	answerData['Survey']['q46'] = time1.getTime();		
 	$.ajax({
@@ -228,6 +229,52 @@ function CreateRecord(answerData)
 	});	
 }
 
+
+function CreateRecord_Code(answerData)
+{
+	answerData['Survey']['userid']='400客服热线满意度问卷_Apr'; 
+	var time1 = new Date();
+	answerData['Survey']['q46'] = time1.getTime();	
+	$.ajax({
+		type: "post",
+		url: "http://121.40.137.214/surveys/addwithbingo.json",
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			if ( json["error"] == "user is invalid.")
+			{
+				bInvalid = 1; 
+//				alert("验证码无效！");
+				if($(".S3_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S3_q')", 1000 );
+					setTimeout("DisplayTopic('.S3_a')", 1000 );			
+				}	
+			}
+			else if (json["error"] == "user exists." )
+			{
+				bInvalid = 1; 
+				alert("抱歉！您已经完成过问卷");			
+			}
+			else
+			{
+				RecordID = json["id"];
+				if($(".S3_q").is(":hidden"))
+				{
+					setTimeout("DisplayTopic('.S3_q')", 1000 );
+					setTimeout("DisplayTopic('.S3_a')", 1000 );			
+				}				
+				console.log(json);
+			}
+		},
+		error: function (err) {
+			console.error(err);
+		}
+
+	});	
+}
+
 function EditRecord(answerData)
 {
 	var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
@@ -263,16 +310,18 @@ function onUserSelect(question, answer) {
 		x = "q";
 		
 	answerData['Survey'][x+ question.toString()] = result; 	
-	
+
 	console.log(answerData);
 
 	if ( RecordID == 0 )
-		CreateRecord(answerData);
-	else
 	{
-		if (bInvalid == 0 )
-			EditRecord(answerData);
+		if ( bPhone == 1)
+			CreateRecord_Phone(answerData);
+		else
+			CreateRecord_Code(answerData);
 	}
+	else
+		EditRecord(answerData);
 }
 
 function browserRedirect() {
@@ -348,48 +397,42 @@ function Final_submit()
 //	onUserSelect(question, answer)
 //	window.location.href='Finish.html';
 
-	if (bInvalid == 0)
-	{
-
-		var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
-		var time = new Date();
-		answerData['Survey']['q47'] = time.getTime();
-		answerData['Survey']['q48'] = 1; 	
-		$.ajax({
-			type: "post",
-			url: temp,
-			data: answerData,
-			dataType: "json",
-			success: function (json) {
-				// send data success
-				console.log(json);
-				bingo = json["bingo"];
-				
-				if (bingo == 1)
-				{
-					window.location.href='Finish1.html';
-				}
-				else
-				{
-					window.location.href='Finish2.html';			
-				}
-			},
-			error: function (err) {
-				console.error(err);
-				alert("请检查您的网络设置");
+	var temp = "http://121.40.137.214/surveys/editwithbingo/"+ RecordID +".json";
+	var time = new Date();
+	answerData['Survey']['q47'] = time.getTime();	
+	answerData['Survey']['q48'] = 1; 	
+	$.ajax({
+		type: "post",
+		url: temp,
+		data: answerData,
+		dataType: "json",
+		success: function (json) {
+			// send data success
+			console.log(json);
+			bingo = json["bingo"];
+			
+			if (bingo == 1)
+			{
+				window.location.href='Finish1.html';
 			}
+			else
+			{
+				window.location.href='Finish2.html';			
+			}
+		},
+		error: function (err) {
+			console.error(err);
+//			alert("请检查您的网络设置");
+			window.location.href='Finish2.html';
+		}
 
-		});	
-	}
-	else
-	{
-		window.location.href='Finish2.html';
-	}
+	});	
 }
 
-function OKforS1a()
+function OKforS1a_1()
 {
-	Answer = document.getElementById("S1a_Answer").value;
+	bPhone = 1;
+	Answer = document.getElementById("S1a_Answer1").value;
 	if (Answer !="")
 	{
 		onUserSelect(1, Answer );		
@@ -397,8 +440,9 @@ function OKforS1a()
 }
 
 
-function keypressS1a(e)
+function keypressS1a_1(e)
 {
+	bPhone = 1; 
 	var e = e || window.event; 
 	var k = e.keyCode;
 	if (k == 13)
@@ -410,7 +454,37 @@ function keypressS1a(e)
 		}	
 		
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
-		Answer = document.getElementById("S1a_Answer").value;
+		Answer = document.getElementById("S1a_Answer1").value;
+		onUserSelect(1, Answer );
+	}
+}
+
+function OKforS1a_2()
+{
+	bPhone = 0;
+	Answer = document.getElementById("S1a_Answer2").value;
+	if (Answer !="")
+	{
+		onUserSelect(1, Answer );		
+	}
+}
+
+
+function keypressS1a_2(e)
+{
+	bPhone = 0; 
+	var e = e || window.event; 
+	var k = e.keyCode;
+	if (k == 13)
+	{
+		if($(".S3_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.S3_q')", 1000 );
+			setTimeout("DisplayTopic('.S3_a')", 1000 );	
+		}	
+		
+//		onUserSelect(7, $('input[name="Question7"]:checked').val() );
+		Answer = document.getElementById("S1a_Answer2").value;
 		onUserSelect(1, Answer );
 	}
 }
@@ -425,7 +499,17 @@ function OKforA2a()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-		onUserSelect(12, Answer );		
+		
+		if (Answer.length <= 50)
+			onUserSelect(12, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(12, str1 );
+			onUserSelect(40, str2 );			
+		}
 	}
 }
 
@@ -451,7 +535,17 @@ function keypressA2a(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2a_Answer").value;
-		onUserSelect(12, Answer );
+//		onUserSelect(12, Answer );
+		if (Answer.length <= 50)
+			onUserSelect(12, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(12, str1 );
+			onUserSelect(40, str2 );			
+		}
 	}
 }
 
@@ -465,7 +559,17 @@ function OKforA2b()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-		onUserSelect(13, Answer );		
+//		onUserSelect(13, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(13, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(13, str1 );
+			onUserSelect(41, str2 );			
+		}
 	}
 }
 
@@ -491,7 +595,17 @@ function keypressA2b(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2a_Answer").value;
-		onUserSelect(13, Answer );
+//		onUserSelect(13, Answer );
+		if (Answer.length <= 50)
+			onUserSelect(13, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(13, str1 );
+			onUserSelect(41, str2 );			
+		}
 	}
 }
 
@@ -506,7 +620,17 @@ function OKforA2c()
 			setTimeout("DisplayTopic('.A3a_q')", 1000 );
 			setTimeout("DisplayTopic('.A3a_a')", 1000 );			
 		}
-		onUserSelect(14, Answer );		
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(14, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(14, str1 );
+			onUserSelect(42, str2 );			
+		}
 	}
 }
 
@@ -516,6 +640,72 @@ function CancelforA2c()
 	{
 		setTimeout("DisplayTopic('.A3a_q')", 1000 );
 		setTimeout("DisplayTopic('.A3a_a')", 1000 );			
+	}
+}
+
+function OKforA3aa()
+{
+	Answer = document.getElementById("A3aa_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A3ab_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A3ab_q')", 1000 );
+			setTimeout("DisplayTopic('.A3ab_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(31, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(31, str1 );
+			onUserSelect(32, str2 );			
+		}
+	}
+}
+
+function CancelforA3aa()
+{
+	if($(".A3ab_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A3ab_q')", 1000 );
+		setTimeout("DisplayTopic('.A3ab_a')", 1000 );			
+	}
+}
+
+function OKforA3b0()
+{
+	Answer = document.getElementById("A3b0_Answer").value;
+	if (Answer !="")
+	{
+		if($(".A3b1_q").is(":hidden"))
+		{
+			setTimeout("DisplayTopic('.A3b1_q')", 1000 );
+			setTimeout("DisplayTopic('.A3b1_a')", 1000 );			
+		}
+//		onUserSelect(14, Answer );		
+		if (Answer.length <= 50)
+			onUserSelect(35, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(35, str1 );
+			onUserSelect(36, str2 );			
+		}
+	}
+}
+
+function CancelforA3b0()
+{
+	if($(".A3b1_q").is(":hidden"))
+	{
+		setTimeout("DisplayTopic('.A3b1_q')", 1000 );
+		setTimeout("DisplayTopic('.A3b1_a')", 1000 );			
 	}
 }
 
@@ -532,7 +722,17 @@ function keypressA2c(e)
 		}
 //		onUserSelect(7, $('input[name="Question7"]:checked').val() );
 		Answer = document.getElementById("A2c_Answer").value;
-		onUserSelect(14, Answer );
+//		onUserSelect(14, Answer );
+		if (Answer.length <= 50)
+			onUserSelect(14, Answer );	
+		else
+		{
+			var str1 = Answer.substr(0, 50);
+			var str2 = Answer.substr(50);
+			
+			onUserSelect(14, str1 );
+			onUserSelect(42, str2 );			
+		}
 	}
 }
 
@@ -573,8 +773,27 @@ $(function(){
     $(".Time").text(now);
 	$(".Time").fadeIn(200);
 	setTimeout("DisplayTopic('.S1a_q')", 0 );
-	setTimeout("DisplayTopic('.S1a_a')", 1000 );
+	setTimeout("DisplayTopic('.S1a_a2')", 1000 );
 	
+	
+	$(".Prea").click(function(){
+	
+		var answer = $('input[name="PreQuestion_1"]:checked').val();
+		
+		if (answer == 1)
+		{
+			$(".S1a_a2").hide();
+			$(".S1a_a1").show();
+			RecordID = 0;
+		}
+		else if (answer == 2)
+		{
+			$(".S1a_a1").hide();
+			$(".S1a_a2").show();		
+			RecordID = 0;
+		}
+		
+	});
 	
 	$(".S3").click(function(){
 		
@@ -958,26 +1177,68 @@ $(function(){
 	$(".A3a").click(function(){
 		
 		var answer = $('input[name="QuestionA3a"]:checked').val();
-
-		if($(".A3b_q").is(":hidden"))
+		
+		if ( answer <= 6)
 		{
-			setTimeout("DisplayTopic('.A3b_q')", 1000 );
-			setTimeout("DisplayTopic('.A3b_a')", 1000 );			
-		}	
-
+			$(".A3aa_q").hide();
+			$(".A3aa_a").hide();	
+			if($(".A3aa_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3aa_q')", 1000 );
+				setTimeout("DisplayTopic('.A3aa_a')", 1000 );
+			}	
+		}
+		else 
+		{
+			$(".A3aa_q").hide();
+			$(".A3aa_a").hide();			
+			
+			if($(".A3ab_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3ab_q')", 1000 );
+				setTimeout("DisplayTopic('.A3ab_a')", 1000 );
+			}			
+		}		
 		onUserSelect(15, answer );	
 	});		
 
+	$(".A3ab_1, .A3ab_2").click(function(){
+		
+		var answer33 = $('input[name="QuestionA3ab_1"]:checked').val();
+		var answer34 = $('input[name="QuestionA3ab_2"]:checked').val();
+				
+		if ( ((answer33 == 1) || (answer33 == 2) || (answer33 == 99))
+		  && ((answer34 == 1) || (answer34 == 2) || (answer34 == 99))) 
+		  {
+		    if ($(".A3b_q").is(":hidden")) {
+		        setTimeout("DisplayTopic('.A3b_q')", 1000);
+		        setTimeout("DisplayTopic('.A3b_a')", 1000);				
+		    }
+			onUserSelect(33, answer33 );	
+			onUserSelect(34, answer34 );								
+		}
+	});		
+	
 	$(".A3b").click(function(){
 		
 		var answer = $('input[name="QuestionA3b"]:checked').val();
 
-		if($(".A3b1_q").is(":hidden"))
+		if ( answer <= 6)
+		{	
+			if($(".A3b0_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3b0_q')", 1000 );
+				setTimeout("DisplayTopic('.A3b0_a')", 1000 );			
+			}			
+		}
+		else
 		{
-			setTimeout("DisplayTopic('.A3b1_q')", 1000 );
-			setTimeout("DisplayTopic('.A3b1_a')", 1000 );			
-		}	
-
+			if($(".A3b1_q").is(":hidden"))
+			{
+				setTimeout("DisplayTopic('.A3b1_q')", 1000 );
+				setTimeout("DisplayTopic('.A3b1_a')", 1000 );			
+			}	
+		}
 		onUserSelect(16, answer );	
 	});	
 
@@ -1046,17 +1307,21 @@ $(function(){
 		onUserSelect(21, answer );	
 	});	
 
-	$(".A4_1, .A4_2, .A4_3, .A4_4").click(function(){
+	$(".A4_1, .A4_2, .A4_3, .A4_4, .A4_5, .A4_6").click(function(){
 		
 		var answer22 = $('input[name="QuestionA4_1"]:checked').val();
 		var answer23 = $('input[name="QuestionA4_2"]:checked').val();
 		var answer24 = $('input[name="QuestionA4_3"]:checked').val();
 		var answer25 = $('input[name="QuestionA4_4"]:checked').val();	
+		var answer37 = $('input[name="QuestionA4_5"]:checked').val();
+		var answer38 = $('input[name="QuestionA4_6"]:checked').val();		
 				
 		if ( ((answer22 == 1) || (answer22 == 2) || (answer22 == 99))
 		  && ((answer23 == 1) || (answer23 == 2) || (answer23 == 99))
 		  && ((answer24 == 1) || (answer24 == 2) || (answer24 == 99))
-		  && ((answer25 == 1) || (answer25 == 2) || (answer25 == 99))) 
+		  && ((answer25 == 1) || (answer25 == 2) || (answer25 == 99))
+		  && ((answer37 == 1) || (answer37 == 2) || (answer37 == 99))
+		  && ((answer38 == 1) || (answer38 == 2) || (answer38 == 99))) 
 		  {
 		    if ($(".A5_q").is(":hidden")) {
 		        setTimeout("DisplayTopic('.A5_q')", 1000);
@@ -1065,7 +1330,9 @@ $(function(){
 			onUserSelect(22, answer22 );	
 			onUserSelect(23, answer23 );	
 			onUserSelect(24, answer24 );
-			onUserSelect(25, answer25 );							
+			onUserSelect(25, answer25 );		
+			onUserSelect(37, answer37 );
+			onUserSelect(38, answer38 );				
 		}
 	});			
 
@@ -1122,6 +1389,7 @@ $(function(){
 <div style="text-align: center">
 <div class="Time" style="text-align: center; margin-left:auto; margin-right:auto; Display: none"></div>
 </div>
+
 <div class="S1a_q" style="Display: none">
 	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
 		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
@@ -1136,20 +1404,46 @@ $(function(){
 		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
 			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color:  rgb(255, 180, 180);" >
 				<section  style="box-sizing: border-box;">
-                    主人！小龙给您拜年啦，祝您猴年挣得猴多猴多的，心情猴好猴好的，运气猴顺猴顺的，睡觉猴香猴香的，爱情猴甜猴甜的，总之，一切都猴蜜猴蜜的! 
-					<br>
-					<br>
-				    主人前两天给小龙打过电话了吧，小龙好希望知道主人的想法，这会让小龙下次做的更好哦！
+				    嗨！主人前两天给小龙打过电话了吧，小龙好希望知道主人的想法，这会让小龙下次做得更好哦！
 					<br>
 					<br>					
-					首先嘛，主人得先填一下手机号，这样小龙才能认出主人哦。
+					首先嘛，主人得先填一下收到的验证码，这样小龙才能认出主人哦。
 				</section>
 			</section>
 		</section>
 	</section>
 </div>
 
-<div class="S1a_a" style="Display: none">
+<div class="Pre_a" style="Display: none">		
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+				<section>
+					<div class="bg">
+                        <p class="choice">
+                            <input class="Prea" name="PreQuestion_1" type="radio" value="1" id="pre_1"><label for="pre_1">手机号验证</label></input>
+                        </p>
+                        <p class="choice">
+                            <input class="Prea" name="PreQuestion_1" type="radio" value="2" id="pre_2"><label for="pre_2">验证码验证</label></input>
+                        </p>
+					</div>				
+				</section>					
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+		</section>
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+				<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+					<section  style="box-sizing: border-box;">
+					<span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+				</section>
+			</section>
+		</section>
+		<section style="width: 0px; height: 0px; clear: both;"></section>
+	</section>
+</div>	
+
+
+<div class="S1a_a1" style="Display: none">
 	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
 		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
 			<section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);" >
@@ -1157,10 +1451,42 @@ $(function(){
 					<div class="S1a_a_controls">
 						<div class="bg">
 							<p class="choice" style="padding: 0;">	
-								<input class = "S1a" id="S1a_Answer" name="QuestionS1a" type="tel" style="width:100%;font-size: 0.9em" placeholder="请填写手机号码"><label for="0_1"></input>
+								<input class = "S1a" id="S1a_Answer1" name="QuestionS1a" type="tel" style="width:100%;font-size: 0.9em" placeholder="请填写手机号码"><label for="0_1"></input>
 							</p>	
 								<div style="text-align: center;">
-									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a()">确 认</a>	
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a_1()">确 认</a>	
+								</div>							
+						</div>
+					</div>					
+				</section>
+			</section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png"/>
+		</section>
+		
+		<section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;" >
+			<section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;" ></section>
+			<section  style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+				<section  style="box-sizing: border-box;">
+					&nbsp;&nbsp;我
+				</section>
+			</section>
+		</section>
+		
+	</section>
+</div>	
+
+
+<div class="S1a_a2" style="Display: none">
+	<section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
+		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;" >
+			<section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);" >
+				<section  style="box-sizing: border-box;">
+					<div class="S1a_a_controls">
+						<div class="bg">
+							<p class="choice" style="padding: 0;">	
+								<textarea class = "S1a" id="S1a_Answer2" name="QuestionS1a" style="width:100%;height:80px; font-size: 0.9em" placeholder="请填写中文验证码" ></textarea>																						
+							</p>	
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforS1a_2()">确 认</a>	
 								</div>							
 						</div>
 					</div>					
@@ -1230,7 +1556,7 @@ $(function(){
 
         </section>
     </div>	
-
+	
 <div class="S3_q" style="Display: none">	
 	<section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;" >
 		<section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;" >
@@ -1652,7 +1978,7 @@ $(function(){
                             </p>
                             <p class="choice">
                                 <input class="S4f" name="QuestionS4f" type="checkbox" value="86" id="7_6"><label for="7_6">商场POS分期（银行合作商户现场直接刷卡分期）</label></input>
-                            </p>
+                            </p>	
 						</div>			
 					</div>					
 				</section>					
@@ -1745,7 +2071,7 @@ $(function(){
 		<section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;" >
 			<img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);" >
 				<section  style="box-sizing: border-box;">
-                    当时有没有转接到人工服务呢？【单选】
+                    在过去一周内是否接受过龙卡信用卡中心的电话人工坐席服务？【单选】
 				</section>
 			</section>
 		</section>
@@ -2089,6 +2415,124 @@ $(function(){
         </section>
     </div>
 
+<div class="A3aa_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        小龙
+                    </section>
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                <img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);">
+                    <section style="box-sizing: border-box;">
+                        能告诉小龙发生了什么让您觉得不满意吗？小龙好想下次能做的更好。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A3aa_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A3aa_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A3aa" id="A3aa_Answer" name="QuestionA3aa" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA3aa()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA3aa()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        <span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+                    </section>
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+
+
+<div class="A3ab_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        小龙
+                    </section>
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                <img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);">
+                    <section style="box-sizing: border-box;">
+                        接通人工服务后，主人觉得客服人员在以下方面做得怎么样呢？
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    <div class="A3ab_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A4_a_controls">
+                            <div class="bg">
+                                <section style="box-sizing: border-box;">
+                                    1. 客服人员主动报工号
+                                </section>
+                                <p>
+                                    <input class="A3ab_1" name="QuestionA3ab_1" type="radio" value="1" id="A3ab_1_1"><label for="A3ab_1_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A3ab_1" name="QuestionA3ab_1" type="radio" value="2" id="A3ab_1_2"><label for="A3ab_1_2"><img src="false.png"/></label></input>   
+									&nbsp;&nbsp;
+                                    <input class="A3ab_1" name="QuestionA3ab_1" type="radio" value="99" id="A3ab_1_3"><label for="A3ab_1_3">无法评价</label></input>
+                                </p>
+                                <section style="box-sizing: border-box;">
+                                    2. 报号清晰
+                                </section>
+                                <p>
+                                    <input class="A3ab_2" name="QuestionA3ab_2" type="radio" value="1" id="A3ab_2_1"><label for="A3ab_2_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A3ab_2" name="QuestionA3ab_2" type="radio" value="2" id="A3ab_2_2"><label for="A3ab_2_2"><img src="false.png"/></label></input>  
+									&nbsp;&nbsp;
+                                    <input class="A3ab_2" name="QuestionA3ab_2" type="radio" value="99" id="A3ab_2_3"><label for="A3ab_2_3">无法评价</label></input>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        <span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+                    </section>
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>	
+	
+	
 <div class="A3b_q" style="Display: none">
         <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
             <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
@@ -2163,6 +2607,60 @@ $(function(){
         </section>
     </div>
 
+<div class="A3b0_q" style="Display: none">
+        <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(002-conv-1-left-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        小龙
+                    </section>
+                </section>
+            </section>
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(255, 228, 200); box-sizing: border-box;">
+                <img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(255, 180, 180);" src="002-conv-1-left-2-v2-img0.png" /><section style=" box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; box-sizing: border-box; background-color: rgb(255, 180, 180);">
+                    <section style="box-sizing: border-box;">
+                        能告诉小龙发生了什么让您觉得不满意吗？小龙好想下次能做的更好。
+                    </section>
+                </section>
+            </section>
+        </section>
+    </div>
+    
+<div class="A3b0_a" style="Display: none">
+        <section style="border: 0px; text-align: right; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
+            <section style="display: inline-block; width: 75%; font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: inherit; text-decoration: inherit; color: inherit; border-color: rgb(188, 227, 249); box-sizing: border-box;">
+                <section style="box-shadow: rgb(165, 165, 165) 0.2em 0.2em 0.1em; display: inline-block; width: 85%; margin-top: 11px; padding: 16px; border-radius: 16px; text-align: left; box-sizing: border-box; background-color: rgb(117, 195, 239);">
+                    <section>
+                        <div class="A3b0_a_controls">
+                            <div class="bg">
+                                <p class="choice" style="padding: 0;">
+									<textarea class = "A3b0" id="A3b0_Answer" name="QuestionA3b0" style="width:100%;height:80px; font-size: 0.9em" ></textarea>										
+                                </p>
+								<br>
+								<div style="text-align: center;">
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "OKforA3b0()">确 认</a>	
+									&nbsp;&nbsp;
+									<a class="small button blue" style="vertical-align: middle; text-align: center; font-size:14px;" onclick = "CancelforA3b0()">跳 过</a>
+								</div>								
+                            </div>
+                        </div>
+                    </section>
+                </section><img style="vertical-align: top; margin-top: 29px; box-sizing: border-box; background-color: rgb(117, 195, 239);" src="003-conv-1-right-2-v2-img0.png" />
+            </section>
+            <section style="display: inline-block; vertical-align: top; width: 60px; box-sizing: border-box;">
+                <section style="width: 55px; height: 55px; margin-left: 10px; box-sizing: border-box; background-image: url(003-conv-1-right-2-v2-img1.png); background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"></section>
+                <section style="font-size: 0.9em; font-family: inherit; font-weight: inherit; text-align: center; text-decoration: inherit; color: inherit; box-sizing: border-box;">
+                    <section style="box-sizing: border-box;">
+                        <span style="font-size: 12.8000001907349px; text-align: center;">&nbsp;&nbsp;我</span>
+                    </section>
+                </section>
+            </section>
+            <section style="width: 0px; height: 0px; clear: both;"></section>
+        </section>
+    </div>
+	
+	
 <div class="A3b1_q" style="Display: none">
         <section style="border: 0px; margin: 0.2em 0px; box-sizing: border-box; padding: 0px;">
             <section style="display: inline-block; width: 60px; vertical-align: top; box-sizing: border-box;">
@@ -2578,6 +3076,26 @@ $(function(){
 									&nbsp;&nbsp;
                                     <input class="A4_4" name="QuestionA4_4" type="radio" value="99" id="24_3"><label for="24_3">无法评价</label></input>
                                 </p>
+                                <section style="box-sizing: border-box;">
+                                    5. 客服人员礼貌询问我的需求
+                                </section>
+                                <p>
+                                    <input class="A4_5" name="QuestionA4_5" type="radio" value="1" id="25_1"><label for="25_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A4_5" name="QuestionA4_5" type="radio" value="2" id="25_2"><label for="25_2"><img src="false.png"/></label></input> 
+									&nbsp;&nbsp;
+                                    <input class="A4_5" name="QuestionA4_5" type="radio" value="99" id="25_3"><label for="25_3">无法评价</label></input>
+                                </p>	
+                                <section style="box-sizing: border-box;">
+                                    6. 问题处理完毕，礼貌询问客户是否有进一步问题
+                                </section>
+                                <p>
+                                    <input class="A4_6" name="QuestionA4_6" type="radio" value="1" id="26_1"><label for="26_1"><img src="true.png"/></label></input>
+                                    &nbsp;&nbsp;
+                                    <input class="A4_6" name="QuestionA4_6" type="radio" value="2" id="26_2"><label for="26_2"><img src="false.png"/></label></input> 
+									&nbsp;&nbsp;
+                                    <input class="A4_6" name="QuestionA4_6" type="radio" value="99" id="26_3"><label for="26_3">无法评价</label></input>
+                                </p>								
                             </div>
                         </div>
                     </section>
